@@ -40,6 +40,7 @@ var
   MenuItem: TMenuItem;
   i: integer;
 begin
+  MainForm.Tag := -1;
   for i := 0 to High(TableArray) do
   begin
     MenuItem := TMenuItem.Create(DirectoryMenu);
@@ -81,7 +82,7 @@ begin
     with Screen do
       for j := 0 to FormCount - 1 do
       begin
-        if Forms[j].Caption = MainForm.DirectoryMenu.Items[i].Caption then
+        if Forms[j].Tag = MainForm.DirectoryMenu.Items[i].Tag then
           MainForm.DirectoryMenu.Items[i].Checked := True;
       end;
   end;

@@ -15,6 +15,7 @@ type
     AboutCreatorLabel: TLabel;
     CloseButton: TButton;
     procedure CloseButtonClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   end;
 
 var
@@ -29,6 +30,11 @@ implementation
 procedure TAboutProgramForm.CloseButtonClick(Sender: TObject);
 begin
   AboutProgramForm.Close;
+end;
+
+procedure TAboutProgramForm.FormCreate(Sender: TObject);
+begin
+  AboutProgramForm.Tag := -1;
 end;
 
 end.

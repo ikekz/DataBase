@@ -1,11 +1,11 @@
 object ListViewForm: TListViewForm
-  Left = 511
-  Height = 311
-  Top = 326
-  Width = 586
+  Left = 277
+  Height = 520
+  Top = 295
+  Width = 1054
   Caption = 'ListViewForm'
-  ClientHeight = 311
-  ClientWidth = 586
+  ClientHeight = 520
+  ClientWidth = 1054
   OnClose = FormClose
   LCLVersion = '1.2.6.0'
   object DBGrid: TDBGrid
@@ -17,9 +17,9 @@ object ListViewForm: TListViewForm
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 271
+    Height = 480
     Top = 40
-    Width = 586
+    Width = 1054
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <>
@@ -34,7 +34,7 @@ object ListViewForm: TListViewForm
     Left = 0
     Height = 40
     Top = 0
-    Width = 586
+    Width = 1054
     Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
@@ -44,10 +44,11 @@ object ListViewForm: TListViewForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
     ClientHeight = 40
-    ClientWidth = 586
+    ClientWidth = 1054
     DataSource = DataSource
     Options = []
     TabOrder = 1
+    VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
   end
   object SQLQuery: TSQLQuery
     FieldDefs = <    

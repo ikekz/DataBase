@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, DBGrids,
-  DBCtrls, sqldb, DB, MetaData, DBConnection;
+  DBCtrls, sqldb, DB, MetaData;
 
 type
 
@@ -41,7 +41,7 @@ begin
     begin
       Close;
       SQL.Clear;
-      SQL.Add('SELECT * FROM ' + Table.Name);
+      SQL.Add(CreateSelect(Table));
       Open;
     end;
     for i := 0 to High(Table.FieldArray) do
