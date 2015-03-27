@@ -39,8 +39,6 @@ type
       CurrentJoinTableName, CurrentJoinFieldName, CurrentJoinFieldShow: string);
   end;
 
-function CreateSelect(Table: TMyTable): string;
-
 var
   TableArray: array of TMyTable;
 
@@ -111,28 +109,6 @@ function TMyJoinField.OutJoin(TableName: string): string;
 begin
   Result := Format(' LEFT JOIN %s ON %s.%s = %s.%s ',
     [JoinTableName, TableName, Name, JoinTableName, JoinFieldName]);
-end;
-
-function CreateSelect(Table: TMyTable): string;
-var
-  i: integer;
-begin
-  Result := 'SELECT ' + Table.Name + '.* ';
-  for i := 0 to High(Table.FieldArray) do
-  begin
-    with Table.FieldArray[i] do
-    begin
-      Result += OutSelectField;
-    end;
-  end;
-  Result += ' FROM ' + Table.Name;
-  for i := 0 to High(Table.FieldArray) do
-  begin
-    with Table.FieldArray[i] do
-    begin
-      Result += OutJoin(Table.Name);
-    end;
-  end;
 end;
 
 initialization
