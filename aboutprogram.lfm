@@ -1,0 +1,47 @@
+object AboutProgramForm: TAboutProgramForm
+  Left = 322
+  Height = 300
+  Top = 411
+  Width = 500
+  Caption = 'О программе'
+  ClientHeight = 300
+  ClientWidth = 500
+  Constraints.MaxHeight = 300
+  Constraints.MaxWidth = 500
+  Constraints.MinHeight = 300
+  Constraints.MinWidth = 500
+  LCLVersion = '1.2.6.0'
+  object AboutCreatorLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 239
+    Top = 0
+    Width = 500
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    Caption = 'Название программы: Редактор расписания'#13#10'Имя разработчика: Зуев Илья'
+    Color = clWhite
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -21
+    Font.Name = 'Arial Unicode MS'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object CloseButton: TButton
+    Left = 200
+    Height = 30
+    Top = 250
+    Width = 100
+    Caption = 'Закрыть'
+    OnClick = CloseButtonClick
+    TabOrder = 0
+  end
+end

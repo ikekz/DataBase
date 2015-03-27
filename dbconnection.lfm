@@ -1,0 +1,26 @@
+object DBConnectionForm: TDBConnectionForm
+  OldCreateOrder = False
+  Height = 247
+  HorizontalOffset = 380
+  VerticalOffset = 226
+  Width = 406
+  object SQLTransaction: TSQLTransaction
+    Active = True
+    Database = IBConnection
+    left = 59
+    top = 80
+  end
+  object IBConnection: TIBConnection
+    Connected = True
+    LoginPrompt = False
+    DatabaseName = 'E:\Ilya\prog\klenin\bd\TEST.FDB'
+    KeepConnection = False
+    Password = 'masterkey'
+    Transaction = SQLTransaction
+    UserName = 'sysdba'
+    CharSet = 'UTF8'
+    LogEvents = []
+    left = 112
+    top = 80
+  end
+end

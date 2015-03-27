@@ -1,0 +1,32 @@
+object MainForm: TMainForm
+  Left = 298
+  Height = 115
+  Top = 148
+  Width = 345
+  Caption = 'Редактор расписания'
+  Menu = MainMenu
+  OnCreate = FormCreate
+  LCLVersion = '1.2.6.0'
+  object MainMenu: TMainMenu
+    left = 56
+    top = 24
+    object FileMenu: TMenuItem
+      Caption = 'Файл'
+      object ExitMenu: TMenuItem
+        Caption = 'Выход'
+        OnClick = ExitMenuClick
+      end
+    end
+    object DirectoryMenu: TMenuItem
+      Caption = 'Справочник'
+      OnClick = DirectoryMenuClick
+    end
+    object ReferenceMenu: TMenuItem
+      Caption = 'Справка'
+      object AboutProgramMenu: TMenuItem
+        Caption = 'О программе'
+        OnClick = AboutProgramMenuClick
+      end
+    end
+  end
+end

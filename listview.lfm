@@ -1,0 +1,91 @@
+object ListViewForm: TListViewForm
+  Left = 511
+  Height = 311
+  Top = 326
+  Width = 586
+  Caption = 'ListViewForm'
+  ClientHeight = 311
+  ClientWidth = 586
+  OnClose = FormClose
+  LCLVersion = '1.2.6.0'
+  object DBGrid: TDBGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = DBNavigator
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Cursor = crHSplit
+    Left = 0
+    Height = 271
+    Top = 40
+    Width = 586
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource
+    TabOrder = 0
+  end
+  object DBNavigator: TDBNavigator
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 40
+    Top = 0
+    Width = 586
+    Anchors = [akTop, akLeft, akRight]
+    BevelOuter = bvNone
+    ChildSizing.EnlargeHorizontal = crsScaleChilds
+    ChildSizing.EnlargeVertical = crsScaleChilds
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 100
+    ClientHeight = 40
+    ClientWidth = 586
+    DataSource = DataSource
+    Options = []
+    TabOrder = 1
+  end
+  object SQLQuery: TSQLQuery
+    FieldDefs = <    
+      item
+        Name = 'STUDENTID'
+        DataType = ftInteger
+        Precision = -1
+        Size = 0
+      end    
+      item
+        Name = 'STYDENTINITIALS'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'GROUPID'
+        DataType = ftInteger
+        Precision = -1
+        Size = 0
+      end>
+    Database = DBConnectionForm.IBConnection
+    Transaction = DBConnectionForm.SQLTransaction
+    SQL.Strings = (
+      'SELECT *'
+      'FROM STUDENTS'
+    )
+    InsertSQL.Strings = (
+      ''
+    )
+    Params = <>
+    left = 40
+    top = 172
+  end
+  object DataSource: TDataSource
+    DataSet = SQLQuery
+    left = 96
+    top = 172
+  end
+end
