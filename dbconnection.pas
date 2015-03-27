@@ -5,7 +5,7 @@ unit DBConnection;
 interface
 
 uses
-  Classes, SysUtils, sqldb, IBConnection, FileUtil;
+  Classes, SysUtils, IBConnection, sqldb, FileUtil;
 
 type
 

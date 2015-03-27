@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, DBGrids,
-  DBCtrls, sqldb, DB, MetaData;
+  DBCtrls, sqldb, DB, MetaData, DBConnection;
 
 type
 
@@ -17,12 +17,8 @@ type
     DBGrid: TDBGrid;
     DBNavigator: TDBNavigator;
     SQLQuery: TSQLQuery;
-    class procedure CreateNewForm(Table: TMyTable); static;
+    class procedure CreateNewForm(Table: TMyTable; CurrentTag: integer); static;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    private
-    { private declarations }
-  public
-    { public declarations }
   end;
 
 var
@@ -34,7 +30,7 @@ implementation
 
 { TListViewForm }
 
-class procedure TListViewForm.CreateNewForm(Table: TMyTable);
+class procedure TListViewForm.CreateNewForm(Table: TMyTable; CurrentTag: integer);
 var
   i: integer;
 begin
@@ -48,14 +44,17 @@ begin
       SQL.Add('SELECT * FROM ' + Table.Name);
       Open;
     end;
-    with DBGrid do
+    for i := 0 to High(Table.FieldArray) do
     begin
-      for i := 0 to High(Table.FieldArray) do
+      with DBGrid.Columns[i] do
       begin
-        Columns[i].Width := Table.FieldArray[i].Width;
-        Columns[i].Title.Caption := Table.FieldArray[i].Caption;
+        FieldName := Table.FieldArray[i].Name;
+        Width := Table.FieldArray[i].Width;
+        Title.Caption := Table.FieldArray[i].Caption;
+        Visible := Table.FieldArray[i].Visible;
       end;
     end;
+    Tag := CurrentTag;
     Caption := Table.Caption;
     Show;
   end;

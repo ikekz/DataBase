@@ -24,10 +24,6 @@ type
     procedure ExitMenuClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure DirectoryMenuItemClick(Sender: TObject);
-  private
-    { private declarations }
-  public
-    { public declarations }
   end;
 
 var
@@ -61,13 +57,13 @@ begin
   with Screen do
     for i := 0 to FormCount - 1 do
     begin
-      if Forms[i].Caption = TMenuItem(Sender).Caption then
+      if Forms[i].Tag = TMenuItem(Sender).Tag then
       begin
         Forms[i].ShowOnTop;
         exit;
       end;
     end;
-  TListViewForm.CreateNewForm(TableArray[TMenuItem(Sender).Tag]);
+  TListViewForm.CreateNewForm(TableArray[TMenuItem(Sender).Tag], TMenuItem(Sender).Tag);
 end;
 
 procedure TMainForm.ExitMenuClick(Sender: TObject);
@@ -93,7 +89,7 @@ end;
 
 procedure TMainForm.AboutProgramMenuClick(Sender: TObject);
 begin
-  AboutProgramForm.show;
+  AboutProgramForm.Show;
 end;
 
 end.

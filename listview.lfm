@@ -16,7 +16,6 @@ object ListViewForm: TListViewForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Cursor = crHSplit
     Left = 0
     Height = 271
     Top = 40

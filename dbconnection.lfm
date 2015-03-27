@@ -1,15 +1,9 @@
 object DBConnectionForm: TDBConnectionForm
   OldCreateOrder = False
-  Height = 247
-  HorizontalOffset = 380
-  VerticalOffset = 226
-  Width = 406
-  object SQLTransaction: TSQLTransaction
-    Active = True
-    Database = IBConnection
-    left = 59
-    top = 80
-  end
+  Height = 260
+  HorizontalOffset = 294
+  VerticalOffset = 150
+  Width = 437
   object IBConnection: TIBConnection
     Connected = True
     LoginPrompt = False
@@ -21,6 +15,12 @@ object DBConnectionForm: TDBConnectionForm
     CharSet = 'UTF8'
     LogEvents = []
     left = 112
-    top = 80
+    top = 88
+  end
+  object SQLTransaction: TSQLTransaction
+    Active = True
+    Database = IBConnection
+    left = 40
+    top = 88
   end
 end

@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="18">
+    <Units Count="19">
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -12,8 +12,8 @@
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="63" Y="19"/>
-        <UsageCount Value="51"/>
+        <CursorPos X="32" Y="19"/>
+        <UsageCount Value="52"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -26,7 +26,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="6" Y="1"/>
-        <UsageCount Value="51"/>
+        <UsageCount Value="52"/>
       </Unit1>
       <Unit2>
         <Filename Value="listview.pas"/>
@@ -37,9 +37,9 @@
         <UnitName Value="ListView"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="19"/>
-        <CursorPos X="7" Y="26"/>
-        <UsageCount Value="43"/>
+        <TopLine Value="17"/>
+        <CursorPos X="29" Y="41"/>
+        <UsageCount Value="44"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
@@ -50,9 +50,9 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="16" Y="72"/>
-        <UsageCount Value="47"/>
+        <TopLine Value="53"/>
+        <CursorPos X="23" Y="30"/>
+        <UsageCount Value="48"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -64,8 +64,8 @@
         <UnitName Value="DBConnect"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="49" Y="8"/>
-        <UsageCount Value="29"/>
+        <CursorPos X="18" Y="1"/>
+        <UsageCount Value="30"/>
       </Unit4>
       <Unit5>
         <Filename Value="aboutprogram.pas"/>
@@ -77,8 +77,8 @@
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="72" Y="17"/>
-        <UsageCount Value="21"/>
+        <CursorPos X="13" Y="1"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit5>
@@ -92,7 +92,7 @@
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="18" Y="1"/>
+        <CursorPos X="32" Y="24"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -120,9 +120,9 @@
         <UnitName Value="Main"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="46"/>
-        <CursorPos X="7" Y="91"/>
-        <UsageCount Value="23"/>
+        <TopLine Value="42"/>
+        <CursorPos X="8" Y="67"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit9>
@@ -191,11 +191,33 @@
         <CursorPos X="15" Y="713"/>
         <UsageCount Value="10"/>
       </Unit17>
+      <Unit18>
+        <Filename Value="dbconnection.lfm"/>
+        <ComponentName Value="DBConnectionForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="41" Y="11"/>
+        <ExtraEditorCount Value="2"/>
+        <ExtraEditor1>
+          <WindowIndex Value="0"/>
+          <TopLine Value="1"/>
+          <CursorPos X="16" Y="9"/>
+        </ExtraEditor1>
+        <ExtraEditor2>
+          <WindowIndex Value="0"/>
+          <TopLine Value="1"/>
+          <CursorPos X="15" Y="3"/>
+        </ExtraEditor2>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit18>
     </Units>
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="29" HistoryIndex="28">
+    <JumpHistory Count="28" HistoryIndex="27">
       <Position1>
         <Filename Value="listview.pas"/>
         <Caret Line="80" Column="25" TopLine="33"/>
@@ -305,13 +327,9 @@
         <Caret Line="97" Column="22" TopLine="48"/>
       </Position27>
       <Position28>
-        <Filename Value="dbconnection.pas"/>
-        <Caret Line="14" Column="16" TopLine="1"/>
+        <Filename Value="metadata.pas"/>
+        <Caret Line="63" Column="44" TopLine="42"/>
       </Position28>
-      <Position29>
-        <Filename Value="dbconnection.pas"/>
-        <Caret Line="24" Column="19" TopLine="1"/>
-      </Position29>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>

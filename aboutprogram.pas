@@ -15,10 +15,6 @@ type
     AboutCreatorLabel: TLabel;
     CloseButton: TButton;
     procedure CloseButtonClick(Sender: TObject);
-  private
-    { private declarations }
-  public
-    { public declarations }
   end;
 
 var
