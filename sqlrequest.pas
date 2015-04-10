@@ -9,6 +9,7 @@ uses
 
 function CreateSelect(Table: TMyTable): string;
 function CreateFilter(Arr: array of TFinishedFilter): string;
+function CreateSort(FieldName: string): string;
 
 implementation
 
@@ -32,6 +33,11 @@ begin
       Result += OutJoin(Table.Name);
     end;
   end;
+end;
+
+function CreateSort(FieldName: string): string;
+begin
+Result := ' ORDER BY ' + FieldName + ' desc ';
 end;
 
 function CreateFilter(Arr: array of TFinishedFilter): string;

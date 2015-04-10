@@ -30,16 +30,20 @@ type
     MainMenu: TMainMenu;
     DataMenu: TMenuItem;
     FilterMenu: TMenuItem;
+    ShowFilterMenu: TMenuItem;
+    TurnFilterMenu: TMenuItem;
     SQLQuery: TSQLQuery;
     FilterStringGrid: TStringGrid;
     procedure AddFilterButtonClick(Sender: TObject);
     procedure ApplyFilterButtonClick(Sender: TObject);
     class procedure CreateNewForm(Table: TMyTable; CurrentTag: integer); static;
+    procedure DBGridTitleClick(Column: TColumn);
     procedure DeleteAllFilterButtonClick(Sender: TObject);
     procedure FieldComboBoxChange(Sender: TObject);
-    procedure FilterMenuClick(Sender: TObject);
+    procedure ShowFilterMenuClick(Sender: TObject);
     procedure FilterStringGridDblClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure TurnFilterMenuClick(Sender: TObject);
   private
     FinishedFilterArray: array of TFinishedFilter;
     procedure AddFinishedFilter(CurrentField: TMyField;
@@ -66,6 +70,7 @@ begin
   begin
     with SQLQuery do
     begin
+      Tag := CurrentTag;
       Close;
       SQL.Text := CreateSelect(Table);
       Open;
@@ -76,6 +81,21 @@ begin
     Caption := Table.Caption;
     Show;
   end;
+end;
+
+procedure TListViewForm.DBGridTitleClick(Column: TColumn);
+var
+  Index: integer;
+begin
+  Index := Column.Index;
+  with SQLQuery do
+  begin
+    Close;
+    SQL.Text := CreateSelect(TableArray[Tag]) +
+      CreateSort(TableArray[Tag].FieldArray[Index].Name);
+    Open;
+  end;
+  FillInDBGrid(TableArray[Tag], DBGrid);
 end;
 
 procedure TListViewForm.DeleteAllFilterButtonClick(Sender: TObject);
@@ -204,16 +224,48 @@ begin
 
 end;
 
-procedure TListViewForm.FilterMenuClick(Sender: TObject);
+procedure TListViewForm.ShowFilterMenuClick(Sender: TObject);
 begin
   CreateFilterPanel.Visible := True;
   FilterStringGrid.Visible := True;
 end;
 
+procedure TListViewForm.FilterStringGridDblClick(Sender: TObject);
+var
+  i: integer;
+begin
+  if Length(FinishedFilterArray) = 0 then
+    exit;
+
+  for i := FilterStringGrid.Row - 1 to High(FinishedFilterArray) - 1 do
+  begin
+    FinishedFilterArray[i] := FinishedFilterArray[i + 1];
+  end;
+  SetLength(FinishedFilterArray, Length(FinishedFilterArray) - 1);
+  if Length(FinishedFilterArray) > 0 then
+  begin
+    FinishedFilterArray[0].Operation := ' WHERE ';
+  end;
+  with SQLQuery do
+  begin
+    Close;
+    SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Tag]) +
+      CreateFilter(FinishedFilterArray);
+    Open;
+  end;
+  FillInStringGrid(FilterStringGrid, FinishedFilterArray);
+  FillInDBGrid(TableArray[TButton(Sender).Parent.Tag], DBGrid);
+end;
 
 procedure TListViewForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   CloseAction := caFree;
+end;
+
+procedure TListViewForm.TurnFilterMenuClick(Sender: TObject);
+begin
+  CreateFilterPanel.Visible := False;
+  FilterStringGrid.Visible := False;
 end;
 
 end.
