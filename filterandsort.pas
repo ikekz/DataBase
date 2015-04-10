@@ -25,6 +25,7 @@ type
     Field: TMyField;
     Condition: TCondition;
     Value, Operation: string;
+    IsApply: boolean;
     function CreateWhereCondition: string;
   end;
 
@@ -99,6 +100,10 @@ begin
       Cells[2, i + 1] := Arr[i].Field.Caption;
       Cells[3, i + 1] := Arr[i].Condition.Caption;
       Cells[4, i + 1] := Arr[i].Value;
+      if Arr[i].IsApply then
+        Cells[5, i + 1] := '✓'
+      else
+        Cells[5, i + 1] := '';
     end;
   end;
 end;

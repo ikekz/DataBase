@@ -2,10 +2,10 @@ object ListViewForm: TListViewForm
   Left = 284
   Height = 623
   Top = 287
-  Width = 821
+  Width = 845
   Caption = 'ListViewForm'
   ClientHeight = 603
-  ClientWidth = 821
+  ClientWidth = 845
   Menu = MainMenu
   OnClose = FormClose
   LCLVersion = '1.2.6.0'
@@ -19,7 +19,7 @@ object ListViewForm: TListViewForm
     Left = 0
     Height = 32
     Top = 64
-    Width = 821
+    Width = 845
     Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
@@ -29,7 +29,7 @@ object ListViewForm: TListViewForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
     ClientHeight = 32
-    ClientWidth = 821
+    ClientWidth = 845
     DataSource = DataSource
     Options = []
     TabOrder = 0
@@ -43,10 +43,10 @@ object ListViewForm: TListViewForm
     Left = 0
     Height = 64
     Top = 0
-    Width = 821
+    Width = 845
     Anchors = [akTop, akLeft, akRight]
     ClientHeight = 64
-    ClientWidth = 821
+    ClientWidth = 845
     ParentColor = False
     TabOrder = 1
     Visible = False
@@ -75,12 +75,12 @@ object ListViewForm: TListViewForm
       Left = 450
       Height = 21
       Top = 32
-      Width = 165
+      Width = 190
       AutoSize = False
       TabOrder = 2
     end
     object AddFilterButton: TButton
-      Left = 625
+      Left = 645
       Height = 45
       Top = 8
       Width = 75
@@ -144,7 +144,7 @@ object ListViewForm: TListViewForm
     Left = 0
     Height = 376
     Top = 96
-    Width = 821
+    Width = 845
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <>
@@ -161,10 +161,10 @@ object ListViewForm: TListViewForm
     Left = 0
     Height = 131
     Top = 472
-    Width = 821
+    Width = 845
     Anchors = [akLeft, akRight, akBottom]
     ClientHeight = 131
-    ClientWidth = 821
+    ClientWidth = 845
     TabOrder = 3
     Visible = False
     object FilterStringGrid: TStringGrid
@@ -177,8 +177,9 @@ object ListViewForm: TListViewForm
       Left = 1
       Height = 129
       Top = 1
-      Width = 614
+      Width = 639
       Anchors = [akTop, akLeft, akBottom]
+      ColCount = 6
       Columns = <      
         item
           Title.Caption = 'Операция'
@@ -186,7 +187,7 @@ object ListViewForm: TListViewForm
         end      
         item
           Title.Caption = 'Поле'
-          Width = 200
+          Width = 180
         end      
         item
           Tag = 1
@@ -197,6 +198,10 @@ object ListViewForm: TListViewForm
           Tag = 2
           Title.Caption = 'Значение'
           Width = 100
+        end      
+        item
+          Title.Caption = 'Применен'
+          Width = 68
         end>
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowSelect, goSmoothScroll]
       RowCount = 1
@@ -204,7 +209,7 @@ object ListViewForm: TListViewForm
       OnDblClick = DeleteFilterButtonClick
     end
     object DeleteFilterButton: TButton
-      Left = 705
+      Left = 725
       Height = 45
       Top = 8
       Width = 105
@@ -214,7 +219,7 @@ object ListViewForm: TListViewForm
       Visible = False
     end
     object ApplyFilterButton: TButton
-      Left = 625
+      Left = 645
       Height = 45
       Top = 8
       Width = 75
@@ -224,7 +229,7 @@ object ListViewForm: TListViewForm
       Visible = False
     end
     object DeleteAllFilterButton: TButton
-      Left = 625
+      Left = 645
       Height = 45
       Top = 58
       Width = 185
@@ -234,9 +239,9 @@ object ListViewForm: TListViewForm
       Visible = False
     end
     object IsFilterApplyLabel: TLabel
-      Left = 625
+      Left = 645
       Height = 15
-      Top = 111
+      Top = 112
       Width = 185
       AutoSize = False
       Caption = 'Фильтр применен'

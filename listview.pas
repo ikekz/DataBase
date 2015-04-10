@@ -52,7 +52,8 @@ type
     FinishedFilterArray: array of TFinishedFilter;
     SortArray: array of TSort;
     procedure AddFinishedFilter(CurrentField: TMyField;
-      CurrentCondition: TCondition; CurrentValue, CurrentOperation: string);
+      CurrentCondition: TCondition; CurrentValue, CurrentOperation: string;
+      CurrentIsApply: boolean);
     procedure AddSort(CurrentFieldName, CurrentOrder: string);
     procedure FillInDBGrid(Table: TMyTable; Grid: TDBGrid);
     procedure FillInFieldComboBox(Table: TMyTable; ComboBox: TComboBox);
@@ -133,7 +134,8 @@ begin
 end;
 
 procedure TListViewForm.AddFinishedFilter(CurrentField: TMyField;
-  CurrentCondition: TCondition; CurrentValue, CurrentOperation: string);
+  CurrentCondition: TCondition; CurrentValue, CurrentOperation: string;
+  CurrentIsApply: boolean);
 begin
   SetLength(FinishedFilterArray, Length(FinishedFilterArray) + 1);
   if Length(FinishedFilterArray) = 1 then
@@ -143,6 +145,7 @@ begin
   FinishedFilterArray[High(FinishedFilterArray)].Condition := CurrentCondition;
   FinishedFilterArray[High(FinishedFilterArray)].Value := CurrentValue;
   FinishedFilterArray[High(FinishedFilterArray)].Operation := CurrentOperation;
+  FinishedFilterArray[High(FinishedFilterArray)].IsApply := CurrentIsApply;
 end;
 
 procedure TListViewForm.RunSQL;
@@ -228,9 +231,15 @@ begin
 end;
 
 procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
+var
+  i: integer;
 begin
+
+  for i := 0 to High(FinishedFilterArray) do
+    FinishedFilterArray[i].IsApply := True;
   RunSQL;
   FillInDBGrid(TableArray[Tag], DBGrid);
+  FillInStringGrid(FilterStringGrid, FinishedFilterArray);
   IsFilterApplyLabel.Visible := True;
 end;
 
@@ -268,7 +277,7 @@ begin
   AddFinishedFilter(
     TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]),
     TCondition(ConditionComboBox.Items.Objects[ConditionComboBox.ItemIndex]),
-    FilterValueEdit.Text, OperationTmp);
+    FilterValueEdit.Text, OperationTmp, False);
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
   VisibleComponents(True);
 end;
@@ -276,6 +285,7 @@ end;
 procedure TListViewForm.FieldComboBoxChange(Sender: TObject);
 begin
   SelectTypeCondition;
+
 end;
 
 procedure TListViewForm.ShowFilterMenuClick(Sender: TObject);
@@ -287,9 +297,11 @@ end;
 procedure TListViewForm.DeleteFilterButtonClick(Sender: TObject);
 var
   i: integer;
+  IsApplyTmp: boolean;
 begin
   if Length(FinishedFilterArray) = 0 then
     exit;
+  IsApplyTmp := FinishedFilterArray[FilterStringGrid.Row - 1].IsApply;
   for i := FilterStringGrid.Row - 1 to High(FinishedFilterArray) - 1 do
   begin
     FinishedFilterArray[i] := FinishedFilterArray[i + 1];
@@ -305,6 +317,8 @@ begin
     OperationComboBox.Text := 'И';
     RunSQL;
   end;
+  if IsApplyTmp then
+    RunSQL;
   IsFilterApplyLabel.Visible := False;
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
   FillInDBGrid(TableArray[Tag], DBGrid);
