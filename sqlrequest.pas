@@ -54,8 +54,13 @@ var
   i: integer;
 begin
   for i := 0 to High(Arr) do
-    Result += Arr[i].CreateWhereCondition;
+  begin
+    if Arr[i].IsApply then
+      Result += Arr[i].Operation + Arr[i].Field.Name + ' ' +
+        Format(Arr[i].Condition.Text, [i]);
+  end;
 end;
 
 end.
+
 

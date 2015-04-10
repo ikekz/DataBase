@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, DBGrids,
-  DBCtrls, ExtCtrls, StdCtrls, Grids, Menus, PairSplitter, sqldb, DB, MetaData,
+  DBCtrls, ExtCtrls, StdCtrls, Grids, Menus, sqldb, DB, MetaData,
   SQLRequest, FilterAndSort;
 
 type
@@ -28,7 +28,6 @@ type
     AboutFieldComboBoxLabel: TLabel;
     AboutConditionComboBoxLabel: TLabel;
     AboutFilterValueEditLabel: TLabel;
-    IsFilterApplyLabel: TLabel;
     MainMenu: TMainMenu;
     DataMenu: TMenuItem;
     FilterMenu: TMenuItem;
@@ -105,7 +104,7 @@ begin
       IsFind := True;
       if SortArray[i].Order = '' then
       begin
-        SortArray[i].Order := ' desc ';
+        SortArray[i].Order := ' DESC ';
       end
       else
       begin
@@ -157,6 +156,10 @@ begin
     Close;
     SQL.Text := CreateSelect(TableArray[Tag]) + CreateFilter(FinishedFilterArray) +
       CreateSort(SortArray);
+    if not Prepared then
+      Prepare;
+    for i := 0 to High(FinishedFilterArray) do
+      Params[i].AsString := FinishedFilterArray[i].Value;
     Open;
   end;
 end;
@@ -183,7 +186,6 @@ begin
   ApplyFilterButton.Visible := CurrentVisible;
   DeleteAllFilterButton.Visible := CurrentVisible;
   OperationComboBox.Visible := CurrentVisible;
-  IsFilterApplyLabel.Visible := False;
 end;
 
 procedure TListViewForm.FillInDBGrid(Table: TMyTable; Grid: TDBGrid);
@@ -234,13 +236,11 @@ procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
 var
   i: integer;
 begin
-
   for i := 0 to High(FinishedFilterArray) do
     FinishedFilterArray[i].IsApply := True;
   RunSQL;
   FillInDBGrid(TableArray[Tag], DBGrid);
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
-  IsFilterApplyLabel.Visible := True;
 end;
 
 procedure TListViewForm.AddFilterButtonClick(Sender: TObject);
@@ -285,7 +285,6 @@ end;
 procedure TListViewForm.FieldComboBoxChange(Sender: TObject);
 begin
   SelectTypeCondition;
-
 end;
 
 procedure TListViewForm.ShowFilterMenuClick(Sender: TObject);
@@ -319,7 +318,6 @@ begin
   end;
   if IsApplyTmp then
     RunSQL;
-  IsFilterApplyLabel.Visible := False;
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
   FillInDBGrid(TableArray[Tag], DBGrid);
 end;

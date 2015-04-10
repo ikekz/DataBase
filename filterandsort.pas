@@ -26,7 +26,6 @@ type
     Condition: TCondition;
     Value, Operation: string;
     IsApply: boolean;
-    function CreateWhereCondition: string;
   end;
 
 procedure FillInConditionComboBoxVarchar(ComboBox: TComboBox);
@@ -42,16 +41,18 @@ begin
     with TCondition do
     begin
       Clear;
-      AddObject('Равно', Create(' = ''%s'' ', 'Равно', 1));
-      AddObject('Не равно', Create(' <> ''%s'' ', 'Не равно', 2));
-      AddObject('Начинается с', Create(' like ''%s%%'' ', 'Начинается с', 3));
-      AddObject('Не начинается с', Create(' not like ''%s%%'' ',
+      AddObject('Равно', Create(' = :param%d ', 'Равно', 1));
+      AddObject('Не равно', Create(' <> :param%d ', 'Не равно', 2));
+      AddObject('Начинается с', Create(' like :param%d || ''%%'' ', 'Начинается с', 3));
+      AddObject('Не начинается с', Create(' not like :param%d || ''%%'' ',
         'Не начинается с', 4));
-      AddObject('Содержит', Create(' like ''%%%s%%'' ', 'Содержит', 5));
-      AddObject('Не содержит', Create(' not like ''%%%s%%'' ', 'Не содержит', 6));
-      AddObject('Заканчивается на', Create(' like ''%%%s'' ',
+      AddObject('Содержит', Create(' like ''%%'' || :param%d || ''%%'' ',
+        'Содержит', 5));
+      AddObject('Не содержит', Create(' not like ''%%'' || :param%d || ''%%'' ',
+        'Не содержит', 6));
+      AddObject('Заканчивается на', Create(' like ''%%'' || :param%d ',
         'Заканчивается на', 7));
-      AddObject('Не заканчивается на', Create(' not like ''%%%s'' ',
+      AddObject('Не заканчивается на', Create(' not like ''%%'' || :param%d ',
         'Не заканчивается на', 8));
     end;
   end;
@@ -65,10 +66,10 @@ begin
     with TCondition do
     begin
       Clear;
-      AddObject('Равно', Create(' = %s ', 'Равно', 9));
-      AddObject('Не равно', Create(' <> %s ', 'Не равно', 10));
-      AddObject('Меньше', Create(' < %s ', 'Меньше', 11));
-      AddObject('Больше', Create(' > %s ', 'Больше', 12));
+      AddObject('Равно', Create(' = :param%d ', 'Равно', 9));
+      AddObject('Не равно', Create(' <> :param%d ', 'Не равно', 10));
+      AddObject('Меньше', Create(' < :param%d ', 'Меньше', 11));
+      AddObject('Больше', Create(' > :param%d ', 'Больше', 12));
     end;
   end;
   ComboBox.Text := ComboBox.Items[0];
@@ -83,7 +84,6 @@ begin
   begin
     for i := 1 to RowCount - 1 do
       Rows[i].Clear;
-
     for i := 1 to ColCount - 1 do
       Cols[i].Clear;
     RowCount := 1;
@@ -108,10 +108,6 @@ begin
   end;
 end;
 
-function TFinishedFilter.CreateWhereCondition: string;
-begin
-  Result := Operation + Field.Name + ' ' + Format(Condition.Text, [Value]);
-end;
 constructor TCondition.Create(CurrentText, CurrentCaption: string; CurrentTag: integer);
 begin
   Text := CurrentText;
