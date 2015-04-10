@@ -6,6 +6,7 @@ object DBConnectionForm: TDBConnectionForm
   Width = 396
   object SQLTransaction: TSQLTransaction
     Active = True
+    Action = caNone
     Database = IBConnection
     left = 40
     top = 72

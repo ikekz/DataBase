@@ -8,6 +8,7 @@ uses
   Classes, SysUtils, MetaData;
 
 function CreateSelect(Table: TMyTable): string;
+function CreateFilter(Field: TMyField; Value, Filter: string): string;
 
 implementation
 
@@ -31,6 +32,11 @@ begin
       Result += OutJoin(Table.Name);
     end;
   end;
+end;
+
+function CreateFilter(Field: TMyField; Value, Filter: string): string;
+begin
+  Result := Format(' WHERE %s %s ', [Field.Name, Filter]);
 end;
 
 end.

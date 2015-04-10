@@ -1,11 +1,11 @@
 object ListViewForm: TListViewForm
-  Left = 277
-  Height = 546
-  Top = 295
-  Width = 1053
+  Left = 400
+  Height = 449
+  Top = 285
+  Width = 678
   Caption = 'ListViewForm'
-  ClientHeight = 546
-  ClientWidth = 1053
+  ClientHeight = 449
+  ClientWidth = 678
   OnClose = FormClose
   LCLVersion = '1.2.6.0'
   object DBGrid: TDBGrid
@@ -17,9 +17,9 @@ object ListViewForm: TListViewForm
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 506
-    Top = 40
-    Width = 1053
+    Height = 267
+    Top = 182
+    Width = 678
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <>
@@ -32,10 +32,10 @@ object ListViewForm: TListViewForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 0
-    Height = 40
-    Top = 0
-    Width = 1053
-    Anchors = [akTop, akLeft, akRight]
+    Height = 32
+    Top = 150
+    Width = 678
+    Anchors = [akLeft, akRight]
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
     ChildSizing.EnlargeVertical = crsScaleChilds
@@ -43,12 +43,64 @@ object ListViewForm: TListViewForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
-    ClientHeight = 40
-    ClientWidth = 1053
+    ClientHeight = 32
+    ClientWidth = 678
     DataSource = DataSource
     Options = []
     TabOrder = 1
     VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
+  end
+  object CreateFilterPanel: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 48
+    Top = 0
+    Width = 678
+    Anchors = [akTop, akLeft, akRight]
+    ClientHeight = 48
+    ClientWidth = 678
+    ParentColor = False
+    TabOrder = 2
+    object FieldNameComboBox: TComboBox
+      Left = 8
+      Height = 21
+      Top = 16
+      Width = 168
+      ItemHeight = 15
+      ReadOnly = True
+      Style = csOwnerDrawFixed
+      TabOrder = 0
+    end
+    object FilterComboBox: TComboBox
+      Left = 208
+      Height = 21
+      Top = 16
+      Width = 176
+      ItemHeight = 15
+      ReadOnly = True
+      Style = csOwnerDrawFixed
+      TabOrder = 1
+    end
+    object AddFilterButton: TButton
+      Left = 544
+      Height = 21
+      Top = 16
+      Width = 75
+      Caption = 'Добавить'
+      OnClick = AddFilterButtonClick
+      TabOrder = 2
+    end
+    object FilterValueEdit: TEdit
+      Left = 408
+      Height = 21
+      Top = 16
+      Width = 120
+      AutoSize = False
+      TabOrder = 3
+    end
   end
   object SQLQuery: TSQLQuery
     FieldDefs = <    
