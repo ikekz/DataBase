@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, DBGrids,
   DBCtrls, ExtCtrls, StdCtrls, Grids, Menus, PairSplitter, sqldb, DB, MetaData,
-  SQLRequest, Filters;
+  SQLRequest, FilterAndSort;
 
 type
 
@@ -146,6 +146,8 @@ begin
 end;
 
 procedure TListViewForm.RunSQL;
+var
+  i: integer;
 begin
   with SQLQuery do
   begin
@@ -180,7 +182,6 @@ begin
   OperationComboBox.Visible := CurrentVisible;
   IsFilterApplyLabel.Visible := False;
 end;
-
 
 procedure TListViewForm.FillInDBGrid(Table: TMyTable; Grid: TDBGrid);
 var
@@ -275,7 +276,6 @@ end;
 procedure TListViewForm.FieldComboBoxChange(Sender: TObject);
 begin
   SelectTypeCondition;
-
 end;
 
 procedure TListViewForm.ShowFilterMenuClick(Sender: TObject);

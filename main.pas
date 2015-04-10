@@ -64,7 +64,8 @@ begin
         exit;
       end;
     end;
-  TListViewForm.CreateNewForm(TableArray[TMenuItem(Sender).Tag], TMenuItem(Sender).Tag);
+  TListViewForm.CreateNewForm(TableArray[TMenuItem(Sender).Tag],
+    TMenuItem(Sender).Tag);
 end;
 
 procedure TMainForm.ExitMenuClick(Sender: TObject);

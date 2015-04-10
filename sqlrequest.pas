@@ -5,7 +5,7 @@ unit SQLRequest;
 interface
 
 uses
-  Classes, SysUtils, MetaData, Dialogs, Filters;
+  Classes, SysUtils, MetaData, Dialogs, FilterAndSort;
 
 function CreateSelect(Table: TMyTable): string;
 function CreateFilter(Arr: array of TFinishedFilter): string;

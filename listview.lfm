@@ -207,7 +207,7 @@ object ListViewForm: TListViewForm
       Left = 705
       Height = 45
       Top = 8
-      Width = 104
+      Width = 105
       Caption = 'Удалить фильтр'
       OnClick = DeleteFilterButtonClick
       TabOrder = 1
@@ -227,7 +227,7 @@ object ListViewForm: TListViewForm
       Left = 625
       Height = 45
       Top = 58
-      Width = 184
+      Width = 185
       Caption = 'Удалить все фильтры'
       OnClick = DeleteAllFilterButtonClick
       TabOrder = 3
@@ -237,7 +237,7 @@ object ListViewForm: TListViewForm
       Left = 625
       Height = 15
       Top = 111
-      Width = 184
+      Width = 185
       AutoSize = False
       Caption = 'Фильтр применен'
       ParentColor = False

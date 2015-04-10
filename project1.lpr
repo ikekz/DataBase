@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, Main, MetaData, ListView, DBConnection, AboutProgram, SQLRequest,
-  Filters;
+  FilterAndSort;
 
 {$R *.res}
 
