@@ -28,6 +28,7 @@ type
     AboutFieldComboBoxLabel: TLabel;
     AboutConditionComboBoxLabel: TLabel;
     AboutFilterValueEditLabel: TLabel;
+    IsFilterApplyLabel: TLabel;
     MainMenu: TMainMenu;
     DataMenu: TMenuItem;
     FilterMenu: TMenuItem;
@@ -177,7 +178,9 @@ begin
   ApplyFilterButton.Visible := CurrentVisible;
   DeleteAllFilterButton.Visible := CurrentVisible;
   OperationComboBox.Visible := CurrentVisible;
+  IsFilterApplyLabel.Visible := False;
 end;
+
 
 procedure TListViewForm.FillInDBGrid(Table: TMyTable; Grid: TDBGrid);
 var
@@ -227,6 +230,7 @@ procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
 begin
   RunSQL;
   FillInDBGrid(TableArray[Tag], DBGrid);
+  IsFilterApplyLabel.Visible := True;
 end;
 
 procedure TListViewForm.AddFilterButtonClick(Sender: TObject);
@@ -301,6 +305,7 @@ begin
     OperationComboBox.Text := 'И';
     RunSQL;
   end;
+  IsFilterApplyLabel.Visible := False;
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
   FillInDBGrid(TableArray[Tag], DBGrid);
 end;

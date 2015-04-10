@@ -142,7 +142,7 @@ object ListViewForm: TListViewForm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = AddedFilterPanel
     Left = 0
-    Height = 398
+    Height = 376
     Top = 96
     Width = 821
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -159,11 +159,11 @@ object ListViewForm: TListViewForm
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 109
-    Top = 494
+    Height = 131
+    Top = 472
     Width = 821
     Anchors = [akLeft, akRight, akBottom]
-    ClientHeight = 109
+    ClientHeight = 131
     ClientWidth = 821
     TabOrder = 3
     Visible = False
@@ -175,7 +175,7 @@ object ListViewForm: TListViewForm
       AnchorSideBottom.Control = AddedFilterPanel
       AnchorSideBottom.Side = asrBottom
       Left = 1
-      Height = 107
+      Height = 129
       Top = 1
       Width = 614
       Anchors = [akTop, akLeft, akBottom]
@@ -226,11 +226,21 @@ object ListViewForm: TListViewForm
     object DeleteAllFilterButton: TButton
       Left = 625
       Height = 45
-      Top = 56
+      Top = 58
       Width = 184
       Caption = 'Удалить все фильтры'
       OnClick = DeleteAllFilterButtonClick
       TabOrder = 3
+      Visible = False
+    end
+    object IsFilterApplyLabel: TLabel
+      Left = 625
+      Height = 15
+      Top = 111
+      Width = 184
+      AutoSize = False
+      Caption = 'Фильтр применен'
+      ParentColor = False
       Visible = False
     end
   end
