@@ -1,31 +1,14 @@
 object ListViewForm: TListViewForm
-  Left = 309
-  Height = 442
-  Top = 281
-  Width = 802
+  Left = 284
+  Height = 623
+  Top = 287
+  Width = 821
   Caption = 'ListViewForm'
-  ClientHeight = 422
-  ClientWidth = 802
+  ClientHeight = 603
+  ClientWidth = 821
   Menu = MainMenu
   OnClose = FormClose
   LCLVersion = '1.2.6.0'
-  object DBGrid: TDBGrid
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = DBNavigator
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = FilterStringGrid
-    Left = 0
-    Height = 225
-    Top = 96
-    Width = 802
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    Color = clWindow
-    Columns = <>
-    DataSource = DataSource
-    TabOrder = 0
-  end
   object DBNavigator: TDBNavigator
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = CreateFilterPanel
@@ -36,7 +19,7 @@ object ListViewForm: TListViewForm
     Left = 0
     Height = 32
     Top = 64
-    Width = 802
+    Width = 821
     Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
@@ -46,10 +29,10 @@ object ListViewForm: TListViewForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
     ClientHeight = 32
-    ClientWidth = 802
+    ClientWidth = 821
     DataSource = DataSource
     Options = []
-    TabOrder = 1
+    TabOrder = 0
     VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
   end
   object CreateFilterPanel: TPanel
@@ -60,15 +43,15 @@ object ListViewForm: TListViewForm
     Left = 0
     Height = 64
     Top = 0
-    Width = 802
+    Width = 821
     Anchors = [akTop, akLeft, akRight]
     ClientHeight = 64
-    ClientWidth = 802
+    ClientWidth = 821
     ParentColor = False
-    TabOrder = 2
+    TabOrder = 1
     Visible = False
     object FieldComboBox: TComboBox
-      Left = 5
+      Left = 70
       Height = 21
       Top = 32
       Width = 185
@@ -79,7 +62,7 @@ object ListViewForm: TListViewForm
       TabOrder = 0
     end
     object ConditionComboBox: TComboBox
-      Left = 200
+      Left = 265
       Height = 21
       Top = 32
       Width = 175
@@ -88,43 +71,25 @@ object ListViewForm: TListViewForm
       Style = csOwnerDrawFixed
       TabOrder = 1
     end
-    object ApplyFilterButton: TButton
-      Left = 515
-      Height = 45
-      Top = 8
-      Width = 75
-      Caption = 'Применить'
-      OnClick = ApplyFilterButtonClick
-      TabOrder = 2
-    end
     object FilterValueEdit: TEdit
-      Left = 385
+      Left = 450
       Height = 21
       Top = 32
-      Width = 120
+      Width = 165
       AutoSize = False
-      TabOrder = 3
+      TabOrder = 2
     end
     object AddFilterButton: TButton
-      Left = 600
+      Left = 625
       Height = 45
       Top = 8
       Width = 75
       Caption = 'Добавить'
       OnClick = AddFilterButtonClick
-      TabOrder = 4
-    end
-    object DeleteAllFilterButton: TButton
-      Left = 685
-      Height = 45
-      Top = 8
-      Width = 110
-      Caption = 'Удалить фильтры'
-      OnClick = DeleteAllFilterButtonClick
-      TabOrder = 5
+      TabOrder = 3
     end
     object AboutFieldComboBoxLabel: TLabel
-      Left = 5
+      Left = 70
       Height = 15
       Top = 8
       Width = 185
@@ -133,7 +98,7 @@ object ListViewForm: TListViewForm
       ParentColor = False
     end
     object AboutConditionComboBoxLabel: TLabel
-      Left = 200
+      Left = 265
       Height = 15
       Top = 8
       Width = 175
@@ -142,7 +107,7 @@ object ListViewForm: TListViewForm
       ParentColor = False
     end
     object AboutFilterValueEditLabel: TLabel
-      Left = 385
+      Left = 450
       Height = 15
       Top = 8
       Width = 120
@@ -150,40 +115,124 @@ object ListViewForm: TListViewForm
       Caption = 'Введите значение'
       ParentColor = False
     end
+    object OperationComboBox: TComboBox
+      Left = 10
+      Height = 21
+      Top = 32
+      Width = 50
+      AutoSize = False
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'И'
+        'Или'
+      )
+      ReadOnly = True
+      Style = csOwnerDrawFixed
+      TabOrder = 4
+      Text = 'И'
+      Visible = False
+    end
   end
-  object FilterStringGrid: TStringGrid
+  object DBGrid: TDBGrid
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = DBGrid
+    AnchorSideTop.Control = DBNavigator
     AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = AddedFilterPanel
+    Left = 0
+    Height = 398
+    Top = 96
+    Width = 821
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource
+    TabOrder = 2
+    OnTitleClick = DBGridTitleClick
+  end
+  object AddedFilterPanel: TPanel
+    AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 101
-    Top = 321
-    Width = 802
+    Height = 109
+    Top = 494
+    Width = 821
     Anchors = [akLeft, akRight, akBottom]
-    ColCount = 4
-    Columns = <    
-      item
-        Title.Caption = 'Поле'
-        Width = 230
-      end    
-      item
-        Tag = 1
-        Title.Caption = 'Условие'
-        Width = 140
-      end    
-      item
-        Tag = 2
-        Title.Caption = 'Значение'
-        Width = 100
-      end>
-    RowCount = 1
+    ClientHeight = 109
+    ClientWidth = 821
     TabOrder = 3
     Visible = False
-    OnDblClick = FilterStringGridDblClick
+    object FilterStringGrid: TStringGrid
+      AnchorSideLeft.Control = AddedFilterPanel
+      AnchorSideTop.Control = AddedFilterPanel
+      AnchorSideRight.Control = Owner
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = AddedFilterPanel
+      AnchorSideBottom.Side = asrBottom
+      Left = 1
+      Height = 107
+      Top = 1
+      Width = 614
+      Anchors = [akTop, akLeft, akBottom]
+      Columns = <      
+        item
+          Title.Caption = 'Операция'
+          Width = 65
+        end      
+        item
+          Title.Caption = 'Поле'
+          Width = 200
+        end      
+        item
+          Tag = 1
+          Title.Caption = 'Условие'
+          Width = 140
+        end      
+        item
+          Tag = 2
+          Title.Caption = 'Значение'
+          Width = 100
+        end>
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowSelect, goSmoothScroll]
+      RowCount = 1
+      TabOrder = 0
+      OnDblClick = DeleteFilterButtonClick
+    end
+    object DeleteFilterButton: TButton
+      Left = 705
+      Height = 45
+      Top = 8
+      Width = 104
+      Caption = 'Удалить фильтр'
+      OnClick = DeleteFilterButtonClick
+      TabOrder = 1
+      Visible = False
+    end
+    object ApplyFilterButton: TButton
+      Left = 625
+      Height = 45
+      Top = 8
+      Width = 75
+      Caption = 'Применить'
+      OnClick = ApplyFilterButtonClick
+      TabOrder = 2
+      Visible = False
+    end
+    object DeleteAllFilterButton: TButton
+      Left = 625
+      Height = 45
+      Top = 56
+      Width = 184
+      Caption = 'Удалить все фильтры'
+      OnClick = DeleteAllFilterButtonClick
+      TabOrder = 3
+      Visible = False
+    end
   end
   object SQLQuery: TSQLQuery
     FieldDefs = <    
@@ -224,13 +273,20 @@ object ListViewForm: TListViewForm
     top = 172
   end
   object MainMenu: TMainMenu
-    left = 131
-    top = 80
+    left = 96
+    top = 112
     object DataMenu: TMenuItem
       Caption = 'Данные'
       object FilterMenu: TMenuItem
         Caption = 'Фильтры'
-        OnClick = FilterMenuClick
+        object ShowFilterMenu: TMenuItem
+          Caption = 'Показать'
+          OnClick = ShowFilterMenuClick
+        end
+        object TurnFilterMenu: TMenuItem
+          Caption = 'Свернуть'
+          OnClick = TurnFilterMenuClick
+        end
       end
     end
   end

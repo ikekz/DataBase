@@ -44,7 +44,7 @@ type
     procedure DeleteAllFilterButtonClick(Sender: TObject);
     procedure FieldComboBoxChange(Sender: TObject);
     procedure ShowFilterMenuClick(Sender: TObject);
-    procedure DeleteFilterButtonClickClick(Sender: TObject);
+    procedure DeleteFilterButtonClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure TurnFilterMenuClick(Sender: TObject);
   private
@@ -56,7 +56,8 @@ type
     procedure FillInDBGrid(Table: TMyTable; Grid: TDBGrid);
     procedure FillInFieldComboBox(Table: TMyTable; ComboBox: TComboBox);
     procedure SelectTypeCondition;
-    procedure AddFilter;
+    procedure RunSQL;
+    procedure VisibleComponents(CurrentVisible: boolean);
   end;
 
 var
@@ -82,6 +83,7 @@ begin
     end;
     FillInDBGrid(Table, DBGrid);
     FillInFieldComboBox(Table, FieldComboBox);
+    SQLQuery.Tag := CurrentTag;
     Tag := CurrentTag;
     Caption := Table.Caption;
     Show;
@@ -90,7 +92,7 @@ end;
 
 procedure TListViewForm.DBGridTitleClick(Column: TColumn);
 var
-  i, j, Index: integer;
+  i, j: integer;
   IsFind: boolean;
 begin
   IsFind := False;
@@ -100,7 +102,9 @@ begin
     begin
       IsFind := True;
       if SortArray[i].Order = '' then
-        SortArray[i].Order := ' desc '
+      begin
+        SortArray[i].Order := ' desc ';
+      end
       else
       begin
         for j := i to High(SortArray) - 1 do
@@ -114,13 +118,7 @@ begin
   end;
   if not IsFind then
     AddSort(TableArray[Tag].FieldArray[Column.Index].Name, '');
-  with SQLQuery do
-  begin
-    Close;
-    SQL.Text := CreateSelect(TableArray[Tag]) + CreateFilter(FinishedFilterArray) +
-      CreateSort(SortArray);
-    Open;
-  end;
+  RunSQL;
   FillInDBGrid(TableArray[Tag], DBGrid);
 end;
 
@@ -128,13 +126,9 @@ procedure TListViewForm.DeleteAllFilterButtonClick(Sender: TObject);
 begin
   SetLength(FinishedFilterArray, 0);
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
-  with SQLQuery do
-  begin
-    Close;
-    SQL.Text := CreateSelect(TableArray[Tag]);
-    Open;
-  end;
+  RunSQL;
   FillInDBGrid(TableArray[Tag], DBGrid);
+  VisibleComponents(False);
 end;
 
 procedure TListViewForm.AddFinishedFilter(CurrentField: TMyField;
@@ -148,6 +142,17 @@ begin
   FinishedFilterArray[High(FinishedFilterArray)].Condition := CurrentCondition;
   FinishedFilterArray[High(FinishedFilterArray)].Value := CurrentValue;
   FinishedFilterArray[High(FinishedFilterArray)].Operation := CurrentOperation;
+end;
+
+procedure TListViewForm.RunSQL;
+begin
+  with SQLQuery do
+  begin
+    Close;
+    SQL.Text := CreateSelect(TableArray[Tag]) + CreateFilter(FinishedFilterArray) +
+      CreateSort(SortArray);
+    Open;
+  end;
 end;
 
 procedure TListViewForm.AddSort(CurrentFieldName, CurrentOrder: string);
@@ -166,7 +171,65 @@ begin
     FillInConditionComboBoxInteger(ConditionComboBox);
 end;
 
-procedure TListViewForm.AddFilter;
+procedure TListViewForm.VisibleComponents(CurrentVisible: boolean);
+begin
+  DeleteFilterButton.Visible := CurrentVisible;
+  ApplyFilterButton.Visible := CurrentVisible;
+  DeleteAllFilterButton.Visible := CurrentVisible;
+  OperationComboBox.Visible := CurrentVisible;
+end;
+
+procedure TListViewForm.FillInDBGrid(Table: TMyTable; Grid: TDBGrid);
+var
+  i, j: integer;
+begin
+  for i := 0 to High(Table.FieldArray) do
+  begin
+    with Grid.Columns[i] do
+    begin
+      FieldName := Table.FieldArray[i].Name;
+      Width := Table.FieldArray[i].Width;
+      Title.Caption := Table.FieldArray[i].Caption;
+      Visible := Table.FieldArray[i].Visible;
+      for j := 0 to High(SortArray) do
+      begin
+        if FieldName = SortArray[j].FieldName then
+          if SortArray[j].Order = '' then
+          begin
+            Title.Caption := Title.Caption + ' ▲' + IntToStr(j + 1);
+          end
+          else
+          begin
+            Title.Caption := Title.Caption + ' ▼' + IntToStr(j + 1);
+          end;
+      end;
+    end;
+  end;
+end;
+
+procedure TListViewForm.FillInFieldComboBox(Table: TMyTable; ComboBox: TComboBox);
+var
+  i: integer;
+begin
+  with ComboBox do
+  begin
+    for i := 0 to High(Table.FieldArray) do
+    begin
+      if Table.FieldArray[i].Visible then
+        Items.AddObject(Table.FieldArray[i].Caption, Table.FieldArray[i]);
+    end;
+    Text := Items[0];
+  end;
+  SelectTypeCondition;
+end;
+
+procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
+begin
+  RunSQL;
+  FillInDBGrid(TableArray[Tag], DBGrid);
+end;
+
+procedure TListViewForm.AddFilterButtonClick(Sender: TObject);
 var
   x, ReturnCode: integer;
   OperationTmp: string;
@@ -191,7 +254,8 @@ begin
     begin
       if (Field.Caption = FieldComboBox.Text) and
         (Condition.Caption = ConditionComboBox.Text) and
-        (Value = FilterValueEdit.Text) and (Operation = OperationTmp) then
+        (Value = FilterValueEdit.Text) and ((Operation = OperationTmp) or
+        (Operation = ' WHERE ')) then
         exit;
     end;
   end;
@@ -201,64 +265,11 @@ begin
     TCondition(ConditionComboBox.Items.Objects[ConditionComboBox.ItemIndex]),
     FilterValueEdit.Text, OperationTmp);
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
-  OperationComboBox.Visible := True;
-  DeleteFilterButton.Visible := True;
-end;
-
-
-procedure TListViewForm.FillInDBGrid(Table: TMyTable; Grid: TDBGrid);
-var
-  i: integer;
-begin
-  for i := 0 to High(Table.FieldArray) do
-  begin
-    with Grid.Columns[i] do
-    begin
-      FieldName := Table.FieldArray[i].Name;
-      Width := Table.FieldArray[i].Width;
-      Title.Caption := Table.FieldArray[i].Caption;
-      Visible := Table.FieldArray[i].Visible;
-    end;
-  end;
-end;
-
-procedure TListViewForm.FillInFieldComboBox(Table: TMyTable; ComboBox: TComboBox);
-var
-  i: integer;
-begin
-  with ComboBox do
-  begin
-    for i := 0 to High(Table.FieldArray) do
-    begin
-      if Table.FieldArray[i].Visible then
-        Items.AddObject(Table.FieldArray[i].Caption, Table.FieldArray[i]);
-    end;
-    Text := Items[0];
-  end;
-  SelectTypeCondition;
-end;
-
-procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
-begin
-
-  AddFilter;
-  with SQLQuery do
-  begin
-    Close;
-    SQL.Text := CreateSelect(TableArray[Tag]) + CreateFilter(FinishedFilterArray);
-    Open;
-  end;
-  FillInDBGrid(TableArray[Tag], DBGrid);
-end;
-
-procedure TListViewForm.AddFilterButtonClick(Sender: TObject);
-begin
-  AddFilter;
+  VisibleComponents(True);
 end;
 
 procedure TListViewForm.FieldComboBoxChange(Sender: TObject);
 begin
-
   SelectTypeCondition;
 
 end;
@@ -269,13 +280,12 @@ begin
   AddedFilterPanel.Visible := True;
 end;
 
-procedure TListViewForm.DeleteFilterButtonClickClick(Sender: TObject);
+procedure TListViewForm.DeleteFilterButtonClick(Sender: TObject);
 var
   i: integer;
 begin
   if Length(FinishedFilterArray) = 0 then
     exit;
-
   for i := FilterStringGrid.Row - 1 to High(FinishedFilterArray) - 1 do
   begin
     FinishedFilterArray[i] := FinishedFilterArray[i + 1];
@@ -287,15 +297,9 @@ begin
   end
   else
   begin
-    DeleteFilterButton.Visible := False;
-    OperationComboBox.Visible := False;
+    VisibleComponents(False);
     OperationComboBox.Text := 'И';
-  end;
-  with SQLQuery do
-  begin
-    Close;
-    SQL.Text := CreateSelect(TableArray[Tag]) + CreateFilter(FinishedFilterArray);
-    Open;
+    RunSQL;
   end;
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
   FillInDBGrid(TableArray[Tag], DBGrid);

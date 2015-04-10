@@ -57,6 +57,5 @@ begin
     Result += Arr[i].CreateWhereCondition;
 end;
 
-
 end.
 
