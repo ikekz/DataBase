@@ -16,14 +16,16 @@ type
     constructor Create(CurrentText: string; CurrentTag: integer);
   end;
 
-procedure FillInFilterComboBox(ComboBox: TComboBox);
+procedure FillInFilterComboBoxVarchar(ComboBox: TComboBox);
+procedure FillInFilterComboBoxInteger(ComboBox: TComboBox);
 
 implementation
 
-procedure FillInFilterComboBox(ComboBox: TComboBox);
+procedure FillInFilterComboBoxVarchar(ComboBox: TComboBox);
 begin
   with ComboBox.Items do
   begin
+    Clear;
     AddObject('Равно', TFilter.Create(' = :param ', 1));
     AddObject('Не равно', TFilter.Create(' <> :param ', 2));
     AddObject('Начинается с', TFilter.Create(' like :param || ''%'' ', 3));
@@ -32,6 +34,18 @@ begin
     AddObject('Не содержит', TFilter.Create(' not like ''%'' || :param || ''%'' ', 6));
     AddObject('Заканчивается на', TFilter.Create(' like ''%'' || :param ', 7));
     AddObject('Не заканчивается на', TFilter.Create(' not like ''%'' || :param ', 8));
+  end;
+end;
+
+procedure FillInFilterComboBoxInteger(ComboBox: TComboBox);
+begin
+  with ComboBox.Items do
+  begin
+    Clear;
+    AddObject('Равно', TFilter.Create(' = :param ', 1));
+    AddObject('Не равно', TFilter.Create(' <> :param ', 2));
+    AddObject('Меньше', TFilter.Create(' < :param ', 3));
+    AddObject('Больше', TFilter.Create(' > :param ', 4));
   end;
 end;
 

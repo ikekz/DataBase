@@ -13,7 +13,7 @@ type
   { TListViewForm }
 
   TListViewForm = class(TForm)
-    AddFilterButton: TButton;
+    ApplyFilterButton: TButton;
     FilterValueEdit: TEdit;
     FilterComboBox: TComboBox;
     FieldNameComboBox: TComboBox;
@@ -22,8 +22,10 @@ type
     DBNavigator: TDBNavigator;
     CreateFilterPanel: TPanel;
     SQLQuery: TSQLQuery;
-    procedure AddFilterButtonClick(Sender: TObject);
+    procedure ApplyFilterButtonClick(Sender: TObject);
     class procedure CreateNewForm(Table: TMyTable; CurrentTag: integer); static;
+    procedure FieldNameComboBoxChange(Sender: TObject);
+    procedure FilterComboBoxChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     class procedure FillInGrid(Table: TMyTable; Grid: TDBGrid); static;
     class procedure FillInFieldNameComboBox(Table: TMyTable; ComboBox: TComboBox); static;
@@ -49,9 +51,9 @@ begin
       SQL.Text := CreateSelect(Table);
       Open;
     end;
+
     FillInGrid(Table, DBGrid);
     FillInFieldNameComboBox(Table, FieldNameComboBox);
-    FillInFilterComboBox(FilterComboBox);
     Tag := CurrentTag;
     Caption := Table.Caption;
     Show;
@@ -89,8 +91,12 @@ begin
   end;
 end;
 
-procedure TListViewForm.AddFilterButtonClick(Sender: TObject);
+procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
+//var
+//  Panel: TPanel;
 begin
+  //Panel := TPanel.Create(ListViewForm);
+  //Panel.Show;
   with SQLQuery do
   begin
     Close;
@@ -99,11 +105,35 @@ begin
       FieldNameComboBox.ItemIndex]), FilterValueEdit.Text,
       TFilter(FilterComboBox.Items.Objects[FilterComboBox.ItemIndex]).Text);
     Prepare;
+    //showmessage(SQL.Text);
     ParamByName('param').AsString := FilterValueEdit.Text;
 
     Open;
   end;
   FillInGrid(TableArray[TButton(Sender).Parent.Parent.Tag], DBGrid);
+
+  //SQLQuery.SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Parent.Tag]) +
+  //  CreateFilter(TMyField(FieldNameComboBox.Items.Objects[FieldNameComboBox.ItemIndex]));
+  //Showmessage(TMyField(FieldNameComboBox.Items.Objects[FieldNameComboBox.ItemIndex]).Caption);
+end;
+
+procedure TListViewForm.FieldNameComboBoxChange(Sender: TObject);
+var
+  //MenuItem: TMenuItem;
+  i: integer;
+begin
+  //showmessage(TMyField(FieldNameComboBox.Items.Objects[FieldNameComboBox.ItemIndex]).DataType);
+  if TMyField(FieldNameComboBox.Items.Objects[FieldNameComboBox.ItemIndex]).DataType = 'VARCHAR' then
+    FillInFilterComboBoxVarchar(FilterComboBox)
+  else
+    FillInFilterComboBoxInteger(FilterComboBox);
+    //MenuItem := TMenuItem.Create(DirectoryMenu);
+    //FieldNameComboBox.Items[i] := DBGrid.Columns[i].FieldName;
+    //DirectoryMenu.Add(MenuItem);
+    //MenuItem.Tag := i;
+    //MenuItem.Caption := TableArray[i].Caption;
+    //MenuItem.OnClick := @DirectoryMenuItemClick;
+
 end;
 
 
