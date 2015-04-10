@@ -8,8 +8,9 @@ uses
   Classes, SysUtils, MetaData, Dialogs, Filters;
 
 function CreateSelect(Table: TMyTable): string;
+//function CreateSort(Table: TMyTable): string;
 function CreateFilter(Arr: array of TFinishedFilter): string;
-function CreateSort(FieldName: string): string;
+function CreateSort(Arr: array of TSort): string;
 
 implementation
 
@@ -22,7 +23,7 @@ begin
   begin
     with Table.FieldArray[i] do
     begin
-      Result += OutSelectField;
+      Result += MakeSelectField;
     end;
   end;
   Result += ' FROM ' + Table.Name;
@@ -30,24 +31,46 @@ begin
   begin
     with Table.FieldArray[i] do
     begin
-      Result += OutJoin(Table.Name);
+      Result += MakeJoin(Table.Name);
     end;
   end;
 end;
 
-function CreateSort(FieldName: string): string;
+function CreateSort(Arr: array of TSort): string;
+var
+  i: integer;
 begin
-Result := ' ORDER BY ' + FieldName + ' desc ';
+  //Result := ' ORDER BY :param ';
+  if Length(Arr) > 0 then
+  begin
+    Result := ' ORDER BY ';
+    for i := 0 to High(Arr) do
+      Result += Arr[i].FieldName + ' ' + Arr[i].Order + ', ';
+    Delete(Result, Length(Result) - 1, 2);
+
+  end;
 end;
 
 function CreateFilter(Arr: array of TFinishedFilter): string;
 var
   i: integer;
 begin
+  //showmessage(inttostr(length(Arr)));
   for i := 0 to High(Arr) do
-   Result += Arr[i].CreateWhereCondition;
+    Result += Arr[i].CreateWhereCondition;
+  //Result += Arr[i + 1].CreateWhereCondition;
+  //Result := Format(' WHERE %s %s ', [Field.Name, Filter]);
+  //Result := 'SELECT * FROM country.db where capital like :param1';
+  //Query1.Prepare;
+  //Query1.ParamByName('param1').AsString:='M%';
+  //Query1.Open;
 end;
 
+
+//function CreateSort(Table: TMyTable): string;
+//begin
+
+//end;
 
 end.
 

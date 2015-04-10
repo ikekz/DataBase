@@ -46,12 +46,16 @@ type
     procedure TurnFilterMenuClick(Sender: TObject);
   private
     FinishedFilterArray: array of TFinishedFilter;
+    SortArray: array of TSort;
     procedure AddFinishedFilter(CurrentField: TMyField;
       CurrentCondition: TCondition; CurrentValue, CurrentOperation: string);
+    procedure AddSort(CurrentFieldName, CurrentOrder: string);
     procedure FillInDBGrid(Table: TMyTable; Grid: TDBGrid);
     procedure FillInFieldComboBox(Table: TMyTable; ComboBox: TComboBox);
     procedure SelectTypeCondition;
     procedure AddFilter;
+    //class var
+    //FinishedFilterArray: array of TFinishedFilter;
   end;
 
 var
@@ -85,14 +89,57 @@ end;
 
 procedure TListViewForm.DBGridTitleClick(Column: TColumn);
 var
-  Index: integer;
+  i, j, Index: integer;
+  IsFind: boolean;
 begin
-  Index := Column.Index;
+  //ShowMessage(inttostr(Column.Index));
+  //ShowMessage(TableArray[Tag].Name);
+  //ShowMessage(inttostr(Tag));
+  //ShowMessage(TableArray[Tag].FieldArray[Column.Index].Name);
+  IsFind := False;
+  for i := 0 to High(SortArray) do
+  begin
+    if SortArray[i].FieldName = TableArray[Tag].FieldArray[Column.Index].Name then
+    begin
+      IsFind := True;
+      if SortArray[i].Order = '' then
+        SortArray[i].Order := ' desc '
+      else
+      begin
+        for j := i to High(SortArray) - 1 do
+        begin
+          SortArray[j] := SortArray[j + 1];
+        end;
+        SetLength(SortArray, Length(SortArray) - 1);
+        Break;
+      end;
+    end;
+  end;
+  if not IsFind then
+    AddSort(TableArray[Tag].FieldArray[Column.Index].Name, '');
+  //Index := Column.Index;
   with SQLQuery do
   begin
     Close;
-    SQL.Text := CreateSelect(TableArray[Tag]) +
-      CreateSort(TableArray[Tag].FieldArray[Index].Name);
+    SQL.Text := CreateSelect(TableArray[Tag]) + CreateSort(SortArray);
+    //ShowMessage(SQL.Text);
+    //Params.Items[1].AsString :=
+    //  TableArray[Tag].FieldArray[i].Name;
+    //ShowMessage(inttostr(Tag));
+    //ShowMessage(TableArray[Tag].FieldArray[Column.Index].Name);
+    //ShowMessage(TableArray[Tag].FieldArray[i].Name);
+    //ShowMessage(SQL.Text);
+    //Prepare;
+    //if not Prepared then
+    //  Prepare;
+
+    //ShowMessage(TableArray[Tag].FieldArray[i].Name);
+    //ParamByName('param').AsString :=
+    //  TableArray[Tag].FieldArray[i].Name;
+    //Params.Items[1].AsString :=
+    //  TableArray[Tag].FieldArray[i].Name;
+    ShowMessage(SQL.Text);
+    //Close;
     Open;
   end;
   FillInDBGrid(TableArray[Tag], DBGrid);
@@ -105,10 +152,10 @@ begin
   with SQLQuery do
   begin
     Close;
-    SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Parent.Tag]);
+    SQL.Text := CreateSelect(TableArray[Tag]);
     Open;
   end;
-  FillInDBGrid(TableArray[TButton(Sender).Parent.Parent.Tag], DBGrid);
+  FillInDBGrid(TableArray[Tag], DBGrid);
 end;
 
 procedure TListViewForm.AddFinishedFilter(CurrentField: TMyField;
@@ -122,6 +169,20 @@ begin
   FinishedFilterArray[High(FinishedFilterArray)].Condition := CurrentCondition;
   FinishedFilterArray[High(FinishedFilterArray)].Value := CurrentValue;
   FinishedFilterArray[High(FinishedFilterArray)].Operation := CurrentOperation;
+  //Result := TableArray[High(TableArray)];
+end;
+
+procedure TListViewForm.AddSort(CurrentFieldName, CurrentOrder: string);
+begin
+  SetLength(SortArray, Length(SortArray) + 1);
+  //if Length(FinishedFilterArray) = 1 then
+  //  CurrentOperation := ' WHERE ';
+  //SortArray[High(SortArray)] := TSort.Create;
+  SortArray[High(SortArray)].FieldName := CurrentFieldName;
+  SortArray[High(SortArray)].Order := CurrentOrder;
+  //FinishedFilterArray[High(FinishedFilterArray)].Value := CurrentValue;
+  //FinishedFilterArray[High(FinishedFilterArray)].Operation := CurrentOperation;
+  //Result := TableArray[High(TableArray)];
 end;
 
 procedure TListViewForm.SelectTypeCondition;
@@ -149,7 +210,6 @@ begin
   end;
   if length(FinishedFilterArray) > 0 then
   begin
-
     with FinishedFilterArray[High(FinishedFilterArray)] do
     begin
       if (Field.Caption = FieldComboBox.Text) and
@@ -158,6 +218,7 @@ begin
         exit;
     end;
   end;
+
   AddFinishedFilter(
     TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]),
     TCondition(ConditionComboBox.Items.Objects[ConditionComboBox.ItemIndex]),
@@ -199,28 +260,83 @@ begin
 end;
 
 procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
+//var
+//  Panel: TPanel;
 begin
+  //Panel := TPanel.Create(ListViewForm);
+  //Panel.Show;
 
   AddFilter;
+  //with FinishedFilterArray[High(FinishedFilterArray)] do
+  //begin
+  //  if (Field.Caption = FieldComboBox.Text) and
+  //    (Condition.Caption = ConditionComboBox.Text) and
+  //    (Value = FilterValueEdit.Text) and (Operation = 'AND ') then
+  //    exit;
+  //end;
+
+
+
+  //AddFinishedFilter(
+  //  TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]),
+  //  TCondition(ConditionComboBox.Items.Objects[ConditionComboBox.ItemIndex]),
+  //  FilterValueEdit.Text, 'AND ');
+  //FillInStringGrid(FilterStringGrid, FinishedFilterArray);
+  //ShowMessage(TableArray[Tag].Name);
   with SQLQuery do
   begin
     Close;
-    SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Parent.Tag]) +
-      CreateFilter(FinishedFilterArray);
+    //ShowMessage(TableArray[Tag].Name);
+    //SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Parent.Tag]) +
+    //  CreateFilter(TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]),
+    //  FilterValueEdit.Text, TCondition(
+    //  ConditionComboBox.Items.Objects[ConditionComboBox.ItemIndex]).Text);
+    SQL.Text := CreateSelect(TableArray[Tag]) + CreateFilter(FinishedFilterArray);
+    //Prepare;
+    ////showmessage(SQL.Text);
+    //ParamByName('param').AsString := FilterValueEdit.Text;
+    //Params.Items[1].AsString := i;
+    //ShowMessage(SQL.Text);
     Open;
   end;
-  FillInDBGrid(TableArray[TButton(Sender).Parent.Parent.Tag], DBGrid);
+  FillInDBGrid(TableArray[Tag], DBGrid);
 
+  //FillInStringGrid(FilterStringGrid, FinishedFilterArray);
+  //SQLQuery.SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Parent.Tag]) +
+  //  CreateFilter(TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]));
+  //Showmessage(TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]).Caption);
 end;
 
 procedure TListViewForm.AddFilterButtonClick(Sender: TObject);
 begin
+  ////if length(FinishedFilterArray) > 0 then
+  //begin
+  //  with FinishedFilterArray[High(FinishedFilterArray)] do
+  //  begin
+  //    if (Field.Caption = FieldComboBox.Text) and
+  //      (Condition.Caption = ConditionComboBox.Text) and
+  //      (Value = FilterValueEdit.Text) and (Operation = 'AND ') then
+  //      exit;
+  //  end;
+  //end;
+  //AddFinishedFilter(
+  //  TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]),
+  //  TCondition(ConditionComboBox.Items.Objects[ConditionComboBox.ItemIndex]),
+  //  FilterValueEdit.Text, 'AND ');
+  //FillInStringGrid(FilterStringGrid, FinishedFilterArray);
   AddFilter;
 end;
 
 procedure TListViewForm.FieldComboBoxChange(Sender: TObject);
 begin
+  //showmessage(TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]).DataType);
   SelectTypeCondition;
+  //MenuItem := TMenuItem.Create(DirectoryMenu);
+  //FieldComboBox.Items[i] := DBGrid.Columns[i].FieldName;
+  //DirectoryMenu.Add(MenuItem);
+  //MenuItem.Tag := i;
+  //MenuItem.Caption := TableArray[i].Caption;
+  //MenuItem.OnClick := @DirectoryMenuItemClick;
 
 end;
 
@@ -228,15 +344,22 @@ procedure TListViewForm.ShowFilterMenuClick(Sender: TObject);
 begin
   CreateFilterPanel.Visible := True;
   FilterStringGrid.Visible := True;
+  //DBGrid.anchor;
 end;
 
 procedure TListViewForm.FilterStringGridDblClick(Sender: TObject);
 var
   i: integer;
 begin
+  //showmessage(inttostr(FilterStringGrid.Row));
+  //FilterStringGrid.Rows[FilterStringGrid.Row].Clear;
+  //FilterStringGrid.sele;
   if Length(FinishedFilterArray) = 0 then
     exit;
 
+  //showmessage(inttostr(FilterStringGrid.Row));
+  //ShowMessage(FinishedFilterArray[FilterStringGrid.Row - 1].Condition.Caption);
+  //ShowMessage(inttostr(FilterStringGrid.Row));
   for i := FilterStringGrid.Row - 1 to High(FinishedFilterArray) - 1 do
   begin
     FinishedFilterArray[i] := FinishedFilterArray[i + 1];
@@ -249,12 +372,13 @@ begin
   with SQLQuery do
   begin
     Close;
-    SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Tag]) +
-      CreateFilter(FinishedFilterArray);
+    SQL.Text := CreateSelect(TableArray[Tag]) + CreateFilter(FinishedFilterArray);
+    //ShowMessage(SQL.Text);
     Open;
   end;
   FillInStringGrid(FilterStringGrid, FinishedFilterArray);
-  FillInDBGrid(TableArray[TButton(Sender).Parent.Tag], DBGrid);
+  //FilterStringGrid.DeleteRow(FilterStringGrid.Row);
+  FillInDBGrid(TableArray[Tag], DBGrid);
 end;
 
 procedure TListViewForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
