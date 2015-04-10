@@ -1,11 +1,11 @@
 object ListViewForm: TListViewForm
   Left = 309
-  Height = 449
+  Height = 442
   Top = 281
-  Width = 678
+  Width = 818
   Caption = 'ListViewForm'
-  ClientHeight = 449
-  ClientWidth = 678
+  ClientHeight = 442
+  ClientWidth = 818
   OnClose = FormClose
   LCLVersion = '1.2.6.0'
   object DBGrid: TDBGrid
@@ -14,13 +14,11 @@ object ListViewForm: TListViewForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 267
-    Top = 182
-    Width = 678
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Height = 160
+    Top = 164
+    Width = 818
+    Anchors = [akLeft, akRight]
     Color = clWindow
     Columns = <>
     DataSource = DataSource
@@ -31,11 +29,12 @@ object ListViewForm: TListViewForm
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = DBGrid
     Left = 0
-    Height = 32
-    Top = 150
-    Width = 678
-    Anchors = [akLeft, akRight]
+    Height = 26
+    Top = 138
+    Width = 818
+    Anchors = [akLeft, akRight, akBottom]
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
     ChildSizing.EnlargeVertical = crsScaleChilds
@@ -43,8 +42,8 @@ object ListViewForm: TListViewForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
-    ClientHeight = 32
-    ClientWidth = 678
+    ClientHeight = 26
+    ClientWidth = 818
     DataSource = DataSource
     Options = []
     TabOrder = 1
@@ -58,36 +57,35 @@ object ListViewForm: TListViewForm
     Left = 0
     Height = 48
     Top = 0
-    Width = 678
+    Width = 818
     Anchors = [akTop, akLeft, akRight]
     ClientHeight = 48
-    ClientWidth = 678
+    ClientWidth = 818
     ParentColor = False
     TabOrder = 2
-    object FieldNameComboBox: TComboBox
+    object FieldComboBox: TComboBox
       Left = 8
       Height = 21
       Top = 16
       Width = 168
       ItemHeight = 15
-      OnChange = FieldNameComboBoxChange
+      OnChange = FieldComboBoxChange
       ReadOnly = True
       Style = csOwnerDrawFixed
       TabOrder = 0
     end
-    object FilterComboBox: TComboBox
-      Left = 208
+    object ConditionComboBox: TComboBox
+      Left = 192
       Height = 21
       Top = 16
       Width = 176
       ItemHeight = 15
-      OnChange = FilterComboBoxChange
       ReadOnly = True
       Style = csOwnerDrawFixed
       TabOrder = 1
     end
     object ApplyFilterButton: TButton
-      Left = 544
+      Left = 512
       Height = 21
       Top = 16
       Width = 75
@@ -96,13 +94,54 @@ object ListViewForm: TListViewForm
       TabOrder = 2
     end
     object FilterValueEdit: TEdit
-      Left = 408
+      Left = 384
       Height = 21
       Top = 16
       Width = 120
       AutoSize = False
       TabOrder = 3
     end
+    object AddFilterButton: TButton
+      Left = 600
+      Height = 22
+      Top = 16
+      Width = 72
+      Caption = 'Добавить'
+      OnClick = AddFilterButtonClick
+      TabOrder = 4
+    end
+  end
+  object FiltersStringGrid: TStringGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = DBGrid
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 118
+    Top = 324
+    Width = 818
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ColCount = 4
+    Columns = <    
+      item
+        Title.Caption = 'Поле'
+        Width = 230
+      end    
+      item
+        Tag = 1
+        Title.Caption = 'Условие'
+        Width = 140
+      end    
+      item
+        Tag = 2
+        Title.Caption = 'Значение'
+        Width = 100
+      end>
+    TabOrder = 3
+    OnDblClick = FiltersStringGridDblClick
   end
   object SQLQuery: TSQLQuery
     FieldDefs = <    

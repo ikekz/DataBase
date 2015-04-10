@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, DBGrids,
-  DBCtrls, ExtCtrls, StdCtrls, sqldb, DB, MetaData, SQLRequest, Filters;
+  DBCtrls, ExtCtrls, StdCtrls, Grids, sqldb, DB, MetaData, SQLRequest, Filters;
 
 type
 
@@ -14,21 +14,30 @@ type
 
   TListViewForm = class(TForm)
     ApplyFilterButton: TButton;
+    AddFilterButton: TButton;
     FilterValueEdit: TEdit;
-    FilterComboBox: TComboBox;
-    FieldNameComboBox: TComboBox;
+    ConditionComboBox: TComboBox;
+    FieldComboBox: TComboBox;
     DataSource: TDataSource;
     DBGrid: TDBGrid;
     DBNavigator: TDBNavigator;
     CreateFilterPanel: TPanel;
+    ConditionsListBox: TListBox;
     SQLQuery: TSQLQuery;
+    FiltersStringGrid: TStringGrid;
+    procedure AddFilterButtonClick(Sender: TObject);
     procedure ApplyFilterButtonClick(Sender: TObject);
     class procedure CreateNewForm(Table: TMyTable; CurrentTag: integer); static;
-    procedure FieldNameComboBoxChange(Sender: TObject);
-    procedure FilterComboBoxChange(Sender: TObject);
+    procedure FieldComboBoxChange(Sender: TObject);
+    procedure FiltersStringGridDblClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+  private
+    FinishedFilterArray: array of TFinishedFilter;
+    procedure AddFinishedFilter(CurrentField: TMyField;
+      CurrentCondition: TCondition; CurrentValue, CurrentOperation: string);
     class procedure FillInGrid(Table: TMyTable; Grid: TDBGrid); static;
-    class procedure FillInFieldNameComboBox(Table: TMyTable; ComboBox: TComboBox); static;
+    class procedure FillInFieldComboBox(Table: TMyTable;
+      ComboBox: TComboBox); static;
   end;
 
 var
@@ -51,13 +60,24 @@ begin
       SQL.Text := CreateSelect(Table);
       Open;
     end;
-
     FillInGrid(Table, DBGrid);
-    FillInFieldNameComboBox(Table, FieldNameComboBox);
+    FillInFieldComboBox(Table, FieldComboBox);
     Tag := CurrentTag;
     Caption := Table.Caption;
     Show;
   end;
+end;
+
+procedure TListViewForm.AddFinishedFilter(CurrentField: TMyField;
+  CurrentCondition: TCondition; CurrentValue, CurrentOperation: string);
+begin
+  SetLength(FinishedFilterArray, Length(FinishedFilterArray) + 1);
+  if Length(FinishedFilterArray) = 1 then CurrentOperation := ' WHERE ';
+  FinishedFilterArray[High(FinishedFilterArray)] := TFinishedFilter.Create;
+  FinishedFilterArray[High(FinishedFilterArray)].Field := CurrentField;
+  FinishedFilterArray[High(FinishedFilterArray)].Condition := CurrentCondition;
+  FinishedFilterArray[High(FinishedFilterArray)].Value := CurrentValue;
+  FinishedFilterArray[High(FinishedFilterArray)].Operation := CurrentOperation;
 end;
 
 class procedure TListViewForm.FillInGrid(Table: TMyTable; Grid: TDBGrid);
@@ -76,8 +96,7 @@ begin
   end;
 end;
 
-class procedure TListViewForm.FillInFieldNameComboBox(Table: TMyTable;
-  ComboBox: TComboBox);
+class procedure TListViewForm.FillInFieldComboBox(Table: TMyTable; ComboBox: TComboBox);
 var
   i: integer;
 begin
@@ -92,50 +111,41 @@ begin
 end;
 
 procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
-//var
-//  Panel: TPanel;
 begin
-  //Panel := TPanel.Create(ListViewForm);
-  //Panel.Show;
+  AddFinishedFilter(
+    TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]),
+    TCondition(ConditionComboBox.Items.Objects[ConditionComboBox.ItemIndex]),
+    FilterValueEdit.Text, 'AND ');
+
   with SQLQuery do
   begin
     Close;
     SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Parent.Tag]) +
-      CreateFilter(TMyField(FieldNameComboBox.Items.Objects[
-      FieldNameComboBox.ItemIndex]), FilterValueEdit.Text,
-      TFilter(FilterComboBox.Items.Objects[FilterComboBox.ItemIndex]).Text);
-    Prepare;
-    //showmessage(SQL.Text);
-    ParamByName('param').AsString := FilterValueEdit.Text;
-
+      CreateFilter(FinishedFilterArray);
+    ShowMessage(SQL.Text);
     Open;
   end;
   FillInGrid(TableArray[TButton(Sender).Parent.Parent.Tag], DBGrid);
 
-  //SQLQuery.SQL.Text := CreateSelect(TableArray[TButton(Sender).Parent.Parent.Tag]) +
-  //  CreateFilter(TMyField(FieldNameComboBox.Items.Objects[FieldNameComboBox.ItemIndex]));
-  //Showmessage(TMyField(FieldNameComboBox.Items.Objects[FieldNameComboBox.ItemIndex]).Caption);
+  FillInFiltersStringGrid(FiltersStringGrid, FinishedFilterArray);
 end;
 
-procedure TListViewForm.FieldNameComboBoxChange(Sender: TObject);
+procedure TListViewForm.AddFilterButtonClick(Sender: TObject);
+begin
+  FillInFiltersStringGrid(FiltersStringGrid, FinishedFilterArray);
+end;
+
+procedure TListViewForm.FieldComboBoxChange(Sender: TObject);
 var
-  //MenuItem: TMenuItem;
   i: integer;
 begin
-  //showmessage(TMyField(FieldNameComboBox.Items.Objects[FieldNameComboBox.ItemIndex]).DataType);
-  if TMyField(FieldNameComboBox.Items.Objects[FieldNameComboBox.ItemIndex]).DataType = 'VARCHAR' then
-    FillInFilterComboBoxVarchar(FilterComboBox)
+  if TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]).DataType =
+    'Varchar' then
+    FillInConditionComboBoxVarchar(ConditionComboBox)
   else
-    FillInFilterComboBoxInteger(FilterComboBox);
-    //MenuItem := TMenuItem.Create(DirectoryMenu);
-    //FieldNameComboBox.Items[i] := DBGrid.Columns[i].FieldName;
-    //DirectoryMenu.Add(MenuItem);
-    //MenuItem.Tag := i;
-    //MenuItem.Caption := TableArray[i].Caption;
-    //MenuItem.OnClick := @DirectoryMenuItemClick;
+    FillInConditionComboBoxInteger(ConditionComboBox);
 
 end;
-
 
 procedure TListViewForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin

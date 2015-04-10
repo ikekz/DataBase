@@ -5,10 +5,10 @@ unit SQLRequest;
 interface
 
 uses
-  Classes, SysUtils, MetaData;
+  Classes, SysUtils, MetaData, Dialogs, Filters;
 
 function CreateSelect(Table: TMyTable): string;
-function CreateFilter(Field: TMyField; Value, Filter: string): string;
+function CreateFilter(Arr: array of TFinishedFilter): string;
 
 implementation
 
@@ -34,10 +34,14 @@ begin
   end;
 end;
 
-function CreateFilter(Field: TMyField; Value, Filter: string): string;
+function CreateFilter(Arr: array of TFinishedFilter): string;
+var
+  i: integer;
 begin
-  Result := Format(' WHERE %s %s ', [Field.Name, Filter]);
+  for i := 0 to High(Arr) do
+   Result += Arr[i].CreateWhereCondition;
 end;
+
 
 end.
 
