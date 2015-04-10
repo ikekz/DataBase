@@ -2,10 +2,11 @@ object ListViewForm: TListViewForm
   Left = 309
   Height = 442
   Top = 281
-  Width = 818
+  Width = 802
   Caption = 'ListViewForm'
-  ClientHeight = 442
-  ClientWidth = 818
+  ClientHeight = 422
+  ClientWidth = 802
+  Menu = MainMenu
   OnClose = FormClose
   LCLVersion = '1.2.6.0'
   object DBGrid: TDBGrid
@@ -14,11 +15,12 @@ object ListViewForm: TListViewForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = FilterStringGrid
     Left = 0
-    Height = 160
-    Top = 164
-    Width = 818
-    Anchors = [akLeft, akRight]
+    Height = 225
+    Top = 96
+    Width = 802
+    Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <>
     DataSource = DataSource
@@ -26,15 +28,16 @@ object ListViewForm: TListViewForm
   end
   object DBNavigator: TDBNavigator
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
+    AnchorSideTop.Control = CreateFilterPanel
+    AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = DBGrid
     Left = 0
-    Height = 26
-    Top = 138
-    Width = 818
-    Anchors = [akLeft, akRight, akBottom]
+    Height = 32
+    Top = 64
+    Width = 802
+    Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
     ChildSizing.EnlargeVertical = crsScaleChilds
@@ -42,8 +45,8 @@ object ListViewForm: TListViewForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
-    ClientHeight = 26
-    ClientWidth = 818
+    ClientHeight = 32
+    ClientWidth = 802
     DataSource = DataSource
     Options = []
     TabOrder = 1
@@ -55,19 +58,20 @@ object ListViewForm: TListViewForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 0
-    Height = 48
+    Height = 64
     Top = 0
-    Width = 818
+    Width = 802
     Anchors = [akTop, akLeft, akRight]
-    ClientHeight = 48
-    ClientWidth = 818
+    ClientHeight = 64
+    ClientWidth = 802
     ParentColor = False
     TabOrder = 2
+    Visible = False
     object FieldComboBox: TComboBox
-      Left = 8
+      Left = 5
       Height = 21
-      Top = 16
-      Width = 168
+      Top = 32
+      Width = 185
       ItemHeight = 15
       OnChange = FieldComboBoxChange
       ReadOnly = True
@@ -75,43 +79,79 @@ object ListViewForm: TListViewForm
       TabOrder = 0
     end
     object ConditionComboBox: TComboBox
-      Left = 192
+      Left = 200
       Height = 21
-      Top = 16
-      Width = 176
+      Top = 32
+      Width = 175
       ItemHeight = 15
       ReadOnly = True
       Style = csOwnerDrawFixed
       TabOrder = 1
     end
     object ApplyFilterButton: TButton
-      Left = 512
-      Height = 21
-      Top = 16
+      Left = 515
+      Height = 45
+      Top = 8
       Width = 75
       Caption = 'Применить'
       OnClick = ApplyFilterButtonClick
       TabOrder = 2
     end
     object FilterValueEdit: TEdit
-      Left = 384
+      Left = 385
       Height = 21
-      Top = 16
+      Top = 32
       Width = 120
       AutoSize = False
       TabOrder = 3
     end
     object AddFilterButton: TButton
       Left = 600
-      Height = 22
-      Top = 16
-      Width = 72
+      Height = 45
+      Top = 8
+      Width = 75
       Caption = 'Добавить'
       OnClick = AddFilterButtonClick
       TabOrder = 4
     end
+    object DeleteAllFilterButton: TButton
+      Left = 685
+      Height = 45
+      Top = 8
+      Width = 110
+      Caption = 'Удалить фильтры'
+      OnClick = DeleteAllFilterButtonClick
+      TabOrder = 5
+    end
+    object AboutFieldComboBoxLabel: TLabel
+      Left = 5
+      Height = 15
+      Top = 8
+      Width = 185
+      AutoSize = False
+      Caption = 'Выберите поле для фильтрации'
+      ParentColor = False
+    end
+    object AboutConditionComboBoxLabel: TLabel
+      Left = 200
+      Height = 15
+      Top = 8
+      Width = 175
+      AutoSize = False
+      Caption = 'Выберите условие фильтрации'
+      ParentColor = False
+    end
+    object AboutFilterValueEditLabel: TLabel
+      Left = 385
+      Height = 15
+      Top = 8
+      Width = 120
+      AutoSize = False
+      Caption = 'Введите значение'
+      ParentColor = False
+    end
   end
-  object FiltersStringGrid: TStringGrid
+  object FilterStringGrid: TStringGrid
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = DBGrid
     AnchorSideTop.Side = asrBottom
@@ -120,10 +160,10 @@ object ListViewForm: TListViewForm
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 118
-    Top = 324
-    Width = 818
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Height = 101
+    Top = 321
+    Width = 802
+    Anchors = [akLeft, akRight, akBottom]
     ColCount = 4
     Columns = <    
       item
@@ -140,8 +180,10 @@ object ListViewForm: TListViewForm
         Title.Caption = 'Значение'
         Width = 100
       end>
+    RowCount = 1
     TabOrder = 3
-    OnDblClick = FiltersStringGridDblClick
+    Visible = False
+    OnDblClick = FilterStringGridDblClick
   end
   object SQLQuery: TSQLQuery
     FieldDefs = <    
@@ -180,5 +222,16 @@ object ListViewForm: TListViewForm
     DataSet = SQLQuery
     left = 96
     top = 172
+  end
+  object MainMenu: TMainMenu
+    left = 131
+    top = 80
+    object DataMenu: TMenuItem
+      Caption = 'Данные'
+      object FilterMenu: TMenuItem
+        Caption = 'Фильтры'
+        OnClick = FilterMenuClick
+      end
+    end
   end
 end
