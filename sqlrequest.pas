@@ -13,6 +13,7 @@ function CreateFilter(Arr: array of TFinishedFilter): string;
 function CreateSort(Arr: array of Sort): string;
 function CreateUpdate(Table: TMyTable): string;
 function CreateInsert(Table: TMyTable): string;
+function CreateDelete(Table: TMyTable): string;
 
 implementation
 
@@ -97,6 +98,13 @@ begin
   Result += ')';
 end;
 
-end.
+function CreateDelete(Table: TMyTable): string;
+var
+  i: integer;
+begin
+  Result := 'DELETE FROM ' + Table.Name + ' WHERE ' + Table.FieldArray[0].Name +
+    ' = :param';
+end;
 
+end.
 

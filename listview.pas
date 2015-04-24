@@ -45,6 +45,7 @@ type
     class procedure CreateNewForm(Table: TMyTable; CurrentTag: integer); static;
     procedure DBGridTitleClick(Column: TColumn);
     procedure DeleteAllFilterButtonClick(Sender: TObject);
+    procedure DeleteButtonClick(Sender: TObject);
     procedure FieldComboBoxChange(Sender: TObject);
     procedure InsertButtonClick(Sender: TObject);
     procedure ShowFilterMenuClick(Sender: TObject);
@@ -145,11 +146,14 @@ begin
   if Length(FinishedFilterArray) = 1 then
     CurrentOperation := ' WHERE ';
   FinishedFilterArray[High(FinishedFilterArray)] := TFinishedFilter.Create;
-  FinishedFilterArray[High(FinishedFilterArray)].Field := CurrentField;
-  FinishedFilterArray[High(FinishedFilterArray)].Condition := CurrentCondition;
-  FinishedFilterArray[High(FinishedFilterArray)].Value := CurrentValue;
-  FinishedFilterArray[High(FinishedFilterArray)].Operation := CurrentOperation;
-  FinishedFilterArray[High(FinishedFilterArray)].IsApply := CurrentIsApply;
+  with FinishedFilterArray[High(FinishedFilterArray)] do
+  begin
+    Field := CurrentField;
+    Condition := CurrentCondition;
+    Value := CurrentValue;
+    Operation := CurrentOperation;
+    IsApply := CurrentIsApply;
+  end;
 end;
 
 procedure TListViewForm.RunSQL;
@@ -235,6 +239,28 @@ begin
     Text := Items[0];
   end;
   SelectTypeCondition;
+end;
+
+
+procedure TListViewForm.DeleteButtonClick(Sender: TObject);
+begin
+  with SQLQuery do
+  begin
+    //Close;
+    SQL.Text := CreateDelete(TableArray[Tag]);
+    //if not Prepared then
+    //  Prepare;
+    //ShowMessage(sql.Text);
+    //ShowMessage(inttostr(DBGrid.DataSource.DataSet.FieldCount));
+    ParamByName('param').AsInteger :=
+      DBGrid.DataSource.DataSet.FieldByName(
+      TableArray[Tag].FieldArray[0].Name).AsInteger;
+    //ShowMessage(sql.Text);
+    Close;
+    ExecSQL;
+  end;
+  RunSQL;
+  FillInDBGrid(TableArray[Tag], DBGrid);
 end;
 
 procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
