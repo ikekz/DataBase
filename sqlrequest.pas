@@ -67,9 +67,9 @@ var
   i: integer;
 begin
   Result := 'UPDATE ' + Table.Name + ' SET ';
-  for i := 0 to High(Table.FieldArray) do
+  for i := 1 to High(Table.FieldArray) do
   begin
-    if Table.FieldArray[i].Visible then
+    if Table.FieldArray[i].TypeField > 0 then
       Result += Table.FieldArray[i].Name + ' = :param' + IntToStr(i) + ', ';
   end;
   Delete(Result, Length(Result) - 1, 1);
