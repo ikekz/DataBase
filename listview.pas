@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, DBGrids,
   DBCtrls, ExtCtrls, StdCtrls, Grids, Menus, sqldb, DB, MetaData,
-  SQLRequest, FilterAndSort;
+  SQLRequest, FilterAndSort, EditView;
 
 type
 
@@ -40,6 +40,7 @@ type
     procedure AddFilterButtonClick(Sender: TObject);
     procedure ApplyFilterButtonClick(Sender: TObject);
     class procedure CreateNewForm(Table: TMyTable; CurrentTag: integer); static;
+    procedure DBGridDblClick(Sender: TObject);
     procedure DBGridTitleClick(Column: TColumn);
     procedure DeleteAllFilterButtonClick(Sender: TObject);
     procedure FieldComboBoxChange(Sender: TObject);
@@ -49,7 +50,7 @@ type
     procedure TurnFilterMenuClick(Sender: TObject);
   private
     FinishedFilterArray: array of TFinishedFilter;
-    SortArray: array of TSort;
+    SortArray: array of Sort;
     procedure AddFinishedFilter(CurrentField: TMyField;
       CurrentCondition: TCondition; CurrentValue, CurrentOperation: string;
       CurrentIsApply: boolean);
@@ -89,6 +90,12 @@ begin
     Caption := Table.Caption;
     Show;
   end;
+end;
+
+procedure TListViewForm.DBGridDblClick(Sender: TObject);
+begin
+  //Application.CreateForm(TListViewForm, ListViewForm);
+  TEditViewForm.CreateNewForm(TableArray[Tag], DBGrid, Tag);
 end;
 
 procedure TListViewForm.DBGridTitleClick(Column: TColumn);
@@ -273,7 +280,6 @@ begin
         exit;
     end;
   end;
-
   AddFinishedFilter(
     TMyField(FieldComboBox.Items.Objects[FieldComboBox.ItemIndex]),
     TCondition(ConditionComboBox.Items.Objects[ConditionComboBox.ItemIndex]),

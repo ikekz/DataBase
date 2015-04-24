@@ -1,0 +1,28 @@
+object EditViewForm: TEditViewForm
+  Left = 594
+  Height = 430
+  Top = 168
+  Width = 415
+  Caption = 'EditViewForm'
+  ClientHeight = 430
+  ClientWidth = 415
+  OnClose = FormClose
+  LCLVersion = '1.2.6.0'
+  object ApplyButton: TButton
+    Left = 48
+    Height = 25
+    Top = 376
+    Width = 75
+    Caption = 'Применить'
+    OnClick = ApplyButtonClick
+    TabOrder = 0
+  end
+  object SQLQuery: TSQLQuery
+    FieldDefs = <>
+    Database = DBConnectionForm.IBConnection
+    Transaction = DBConnectionForm.SQLTransaction
+    Params = <>
+    left = 43
+    top = 165
+  end
+end

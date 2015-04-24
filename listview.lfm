@@ -1,25 +1,24 @@
 object ListViewForm: TListViewForm
-  Left = 284
-  Height = 623
-  Top = 287
-  Width = 845
+  Left = 362
+  Height = 618
+  Top = 273
+  Width = 836
   Caption = 'ListViewForm'
-  ClientHeight = 603
-  ClientWidth = 845
+  ClientHeight = 598
+  ClientWidth = 836
   Menu = MainMenu
   OnClose = FormClose
   LCLVersion = '1.2.6.0'
   object DBNavigator: TDBNavigator
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = CreateFilterPanel
-    AnchorSideTop.Side = asrBottom
+    AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = DBGrid
     Left = 0
     Height = 32
-    Top = 64
-    Width = 845
+    Top = 0
+    Width = 836
     Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
@@ -29,7 +28,7 @@ object ListViewForm: TListViewForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
     ClientHeight = 32
-    ClientWidth = 845
+    ClientWidth = 836
     DataSource = DataSource
     Options = []
     TabOrder = 0
@@ -40,13 +39,14 @@ object ListViewForm: TListViewForm
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = AddedFilterPanel
     Left = 0
-    Height = 64
-    Top = 0
-    Width = 845
-    Anchors = [akTop, akLeft, akRight]
-    ClientHeight = 64
-    ClientWidth = 845
+    Height = 61
+    Top = 420
+    Width = 836
+    Anchors = [akLeft, akRight, akBottom]
+    ClientHeight = 61
+    ClientWidth = 836
     ParentColor = False
     TabOrder = 1
     Visible = False
@@ -140,31 +140,34 @@ object ListViewForm: TListViewForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = AddedFilterPanel
+    AnchorSideBottom.Control = CreateFilterPanel
     Left = 0
-    Height = 376
-    Top = 96
-    Width = 845
+    Height = 388
+    Top = 32
+    Width = 836
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <>
     DataSource = DataSource
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     TabOrder = 2
+    OnDblClick = DBGridDblClick
     OnTitleClick = DBGridTitleClick
   end
   object AddedFilterPanel: TPanel
     AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = CreateFilterPanel
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 131
-    Top = 472
-    Width = 845
+    Height = 117
+    Top = 481
+    Width = 836
     Anchors = [akLeft, akRight, akBottom]
-    ClientHeight = 131
-    ClientWidth = 845
+    ClientHeight = 117
+    ClientWidth = 836
     TabOrder = 3
     Visible = False
     object FilterStringGrid: TStringGrid
@@ -175,10 +178,10 @@ object ListViewForm: TListViewForm
       AnchorSideBottom.Control = AddedFilterPanel
       AnchorSideBottom.Side = asrBottom
       Left = 1
-      Height = 129
-      Top = 1
+      Height = 108
+      Top = 8
       Width = 639
-      Anchors = [akTop, akLeft, akBottom]
+      Anchors = [akLeft, akBottom]
       ColCount = 6
       Columns = <      
         item
@@ -206,7 +209,6 @@ object ListViewForm: TListViewForm
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowSelect, goSmoothScroll]
       RowCount = 1
       TabOrder = 0
-      OnDblClick = DeleteFilterButtonClick
     end
     object DeleteFilterButton: TButton
       Left = 725
@@ -231,21 +233,11 @@ object ListViewForm: TListViewForm
     object DeleteAllFilterButton: TButton
       Left = 645
       Height = 45
-      Top = 58
+      Top = 63
       Width = 185
       Caption = 'Удалить все фильтры'
       OnClick = DeleteAllFilterButtonClick
       TabOrder = 3
-      Visible = False
-    end
-    object IsFilterApplyLabel: TLabel
-      Left = 645
-      Height = 15
-      Top = 112
-      Width = 185
-      AutoSize = False
-      Caption = 'Фильтр применен'
-      ParentColor = False
       Visible = False
     end
   end

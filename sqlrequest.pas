@@ -9,7 +9,8 @@ uses
 
 function CreateSelect(Table: TMyTable): string;
 function CreateFilter(Arr: array of TFinishedFilter): string;
-function CreateSort(Arr: array of TSort): string;
+function CreateSort(Arr: array of Sort): string;
+function CreateUpdate(Table: TMyTable): string;
 
 implementation
 
@@ -35,7 +36,7 @@ begin
   end;
 end;
 
-function CreateSort(Arr: array of TSort): string;
+function CreateSort(Arr: array of Sort): string;
 var
   i: integer;
 begin
@@ -59,6 +60,19 @@ begin
       Result += Arr[i].Operation + Arr[i].Field.Name + ' ' +
         Format(Arr[i].Condition.Text, [i]);
   end;
+end;
+
+function CreateUpdate(Table: TMyTable): string;
+var
+  i: integer;
+begin
+  Result := 'UPDATE ' + Table.Name + ' SET ';
+  for i := 0 to High(Table.FieldArray) do
+  begin
+    if Table.FieldArray[i].Visible then
+      Result += Table.FieldArray[i].Name + ' = :param' + IntToStr(i);
+  end;
+  Result += ' WHERE ' + Table.FieldArray[0].Name + ' = :p';
 end;
 
 end.
