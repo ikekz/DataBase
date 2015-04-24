@@ -70,9 +70,10 @@ begin
   for i := 0 to High(Table.FieldArray) do
   begin
     if Table.FieldArray[i].Visible then
-      Result += Table.FieldArray[i].Name + ' = :param' + IntToStr(i);
+      Result += Table.FieldArray[i].Name + ' = :param' + IntToStr(i) + ', ';
   end;
-  Result += ' WHERE ' + Table.FieldArray[0].Name + ' = :p';
+  Delete(Result, Length(Result) - 1, 1);
+  Result += 'WHERE ' + Table.FieldArray[0].Name + ' = :p';
 end;
 
 end.

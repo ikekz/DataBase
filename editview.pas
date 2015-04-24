@@ -13,7 +13,6 @@ type
   { TEditViewForm }
 
   TEditViewForm = class(TForm)
-
     ApplyButton: TButton;
     DynamicLabel: TLabel;
     DynamicEdit: TEdit;
@@ -104,7 +103,7 @@ begin
       Params[i].AsString := EditArray[i].Text;
     ParamByName('p').AsInteger := UpdateID;
     ShowMessage(SQL.Text);
-    Open;
+    ExecSQL;
   end;
 
 end;
