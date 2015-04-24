@@ -25,4 +25,9 @@ object EditViewForm: TEditViewForm
     left = 43
     top = 165
   end
+  object DataSource: TDataSource
+    DataSet = SQLQuery
+    left = 101
+    top = 165
+  end
 end

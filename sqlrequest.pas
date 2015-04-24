@@ -69,7 +69,7 @@ begin
   Result := 'UPDATE ' + Table.Name + ' SET ';
   for i := 1 to High(Table.FieldArray) do
   begin
-    if Table.FieldArray[i].TypeField > 0 then
+    if Table.FieldArray[i].ClassName <> 'TMyShowField' then
       Result += Table.FieldArray[i].Name + ' = :param' + IntToStr(i) + ', ';
   end;
   Delete(Result, Length(Result) - 1, 1);

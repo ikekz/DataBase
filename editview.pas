@@ -25,6 +25,12 @@ type
   private
     ObjectArray: array of TObject;
     UpdateID: integer;
+    procedure CreateNewLabel(NumberItem: integer; CurrentField: TMyField;
+      Table: TMyTable);
+    procedure CreateNewComboBox(NumberItem: integer; CurrentField: TMyField;
+      DBGrid: TDBGrid);
+    procedure CreateNewEdit(NumberItem: integer; CurrentField: TMyField;
+      DBGrid: TDBGrid);
   public
     { public declarations }
   end;
@@ -41,11 +47,10 @@ implementation
 class procedure TEditViewForm.CreateNewForm(Table: TMyTable; DBGrid: TDBGrid;
   CurrentTag: integer);
 var
-  i, j, k: integer;
-  CaptionTmp: string;
+  i, NumberItem: integer;
 begin
   Application.CreateForm(TEditViewForm, EditViewForm);
-  j := 0;
+  NumberItem := 0;
   with EditViewForm do
   begin
     UpdateID := DBGrid.DataSource.DataSet.FieldByName(
@@ -54,156 +59,113 @@ begin
     Tag := CurrentTag;
     for i := 1 to High(Table.FieldArray) do
     begin
-      //if Table.FieldArray[i].Visible then
-      //begin
-      if Table.FieldArray[i].TypeField > 0 then
+      if Table.FieldArray[i].ClassName <> 'TMyShowField' then
       begin
-        DynamicLabel := TLabel.Create(DynamicLabel);
-        with DynamicLabel do
-        begin
-          Parent := EditViewForm;
-          Left := 10;
-          Top := 35 + 35 * j;
-          Tag := i;
-          Width := 140;
-          Height := 21;
-          if Table.FieldArray[i].TypeField = 2 then
-          begin
-            for k := 1 to High(Table.FieldArray) do
-            begin
-              if Table.FieldArray[k].Name = TMyJoinField(
-                Table.FieldArray[i]).JoinFieldShow then
-                Caption := Table.FieldArray[k].Caption;
-            end;
 
-          end
-          else
-          begin
-            Caption := Table.FieldArray[i].Caption;
-          end;
-        end;
+        CreateNewLabel(NumberItem, Table.FieldArray[i], Table);
+
         SetLength(ObjectArray, Length(ObjectArray) + 1);
-        if Table.FieldArray[i].TypeField = 2 then
-        begin
-          //ObjectArray[High(ObjectArray)] :=
-          //  TEdit.Create(TEdit(ObjectArray[High(ObjectArray)]));
-          //with TEdit(ObjectArray[High(ObjectArray)]) do
-          //begin
-          //  Parent := EditViewForm;
-          //  Left := 150;
-          //  Top := 35 + 35 * j;
-          //  Tag := i;
-          //  Width := 250;
-          //  Height := 21;
-          //  //Caption := Table.FieldArray[i].Caption;
-          //  Caption := DBGrid.DataSource.DataSet.FieldByName(
-          //    Table.FieldArray[i].Name).AsString;
-          //end;
-
-          ObjectArray[High(ObjectArray)] :=
-            TComboBox.Create(TComboBox(ObjectArray[High(ObjectArray)]));
-
-          with SQLQuery do
-          begin
-            Close;
-            SQL.Text := 'SELECT * FROM ' + TMyJoinField(
-              Table.FieldArray[i]).JoinTableName;
-            Open;
-
-            while not EOF do
-            begin
-              TComboBox(ObjectArray[High(ObjectArray)]).Items.AddObject(
-                FieldByName(TMyJoinField(Table.FieldArray[i]).JoinFieldShow).AsString,
-                TObject(FieldByName(TMyJoinField(Table.FieldArray[i]).JoinFieldName).AsInteger));
-
-              if DBGrid.DataSource.DataSet.FieldByName(
-                Table.FieldArray[i].Name).AsString =
-                FieldByName(TMyJoinField(Table.FieldArray[i]).JoinFieldName).AsString
-              then
-                CaptionTmp :=
-                  FieldByName(TMyJoinField(Table.FieldArray[i]).JoinFieldShow).AsString;
-
-              Next;
-            end;
-          end;
-          with TComboBox(ObjectArray[High(ObjectArray)]) do
-          begin
-            Parent := EditViewForm;
-            ReadOnly := True;
-            Style := csOwnerDrawFixed;
-            Left := 150;
-            Top := 35 + 35 * j;
-            Tag := i;
-            Width := 250;
-            Height := 21;
-            Caption := CaptionTmp;
-            //Items[1] := CaptionTmp;
-          end;
-        end
+        if Table.FieldArray[i].ClassName = 'TMyJoinField' then
+          CreateNewComboBox(NumberItem, Table.FieldArray[i], DBGrid)
         else
-        begin
-          ObjectArray[High(ObjectArray)] :=
-            TEdit.Create(TEdit(ObjectArray[High(ObjectArray)]));
-          with TEdit(ObjectArray[High(ObjectArray)]) do
-          begin
-            Parent := EditViewForm;
-            Left := 150;
-            Top := 35 + 35 * j;
-            Tag := i;
-            Width := 250;
-            Height := 21;
-            //Caption := Table.FieldArray[i].Caption;
-            Caption := DBGrid.DataSource.DataSet.FieldByName(
-              Table.FieldArray[i].Name).AsString;
-          end;
+          CreateNewEdit(NumberItem, Table.FieldArray[i], DBGrid);
 
-
-          //ObjectArray[High(ObjectArray)] :=
-          //  TComboBox.Create(TComboBox(ObjectArray[High(ObjectArray)]));
-
-          //with SQLQuery do
-          //begin
-          //  Close;
-          //  SQL.Text := 'SELECT * FROM ' + TMyJoinField(
-          //    Table.FieldArray[i]).JoinTableName;
-          //  Open;
-
-          //  while not EOF do
-          //  begin
-          //    TComboBox(ObjectArray[High(ObjectArray)]).Items.AddObject(
-          //      FieldByName(TMyJoinField(Table.FieldArray[i]).JoinFieldShow).AsString,
-          //      TObject(FieldByName(TMyJoinField(Table.FieldArray[i]).JoinFieldName).AsInteger));
-
-          //    if DBGrid.DataSource.DataSet.FieldByName(
-          //      Table.FieldArray[i].Name).AsString =
-          //      FieldByName(TMyJoinField(Table.FieldArray[i]).JoinFieldName).AsString then
-          //      CaptionTmp := FieldByName(TMyJoinField(Table.FieldArray[i]).JoinFieldShow).AsString;
-
-          //    Next;
-          //  end;
-          //end;
-          //with TComboBox(ObjectArray[High(ObjectArray)]) do
-          //begin
-          //  Parent := EditViewForm;
-          //  ReadOnly := True;
-          //  Style := csOwnerDrawFixed;
-          //  Left := 150;
-          //  Top := 35 + 35 * j;
-          //  Tag := i;
-          //  Width := 250;
-          //  Height := 21;
-          //  Caption := CaptionTmp;
-          //  //Items[1] := CaptionTmp;
-          //end;
-        end;
-
-        Inc(j);
+        Inc(NumberItem);
         //end;
       end;
 
     end;
     ShowModal;
     //ModalResult := 1;
+  end;
+end;
+
+procedure TEditViewForm.CreateNewComboBox(NumberItem: integer;
+  CurrentField: TMyField; DBGrid: TDBGrid);
+var
+  CaptionTmp: string;
+begin
+  ObjectArray[High(ObjectArray)] :=
+    TComboBox.Create(TComboBox(ObjectArray[High(ObjectArray)]));
+
+  with SQLQuery do
+  begin
+    Close;
+    SQL.Text := 'SELECT * FROM ' + TMyJoinField(CurrentField).JoinTableName;
+    Open;
+
+    while not EOF do
+    begin
+      TComboBox(ObjectArray[High(ObjectArray)]).Items.AddObject(
+        FieldByName(TMyJoinField(CurrentField).JoinFieldShow).AsString,
+        TObject(FieldByName(TMyJoinField(CurrentField).JoinFieldName).AsInteger));
+
+      if DBGrid.DataSource.DataSet.FieldByName(CurrentField.Name).AsString =
+        FieldByName(TMyJoinField(CurrentField).JoinFieldName).AsString then
+      begin
+        CaptionTmp :=
+          FieldByName(TMyJoinField(CurrentField).JoinFieldShow).AsString;
+      end;
+
+      Next;
+    end;
+  end;
+  with TComboBox(ObjectArray[High(ObjectArray)]) do
+  begin
+    Parent := EditViewForm;
+    ReadOnly := True;
+    Style := csOwnerDrawFixed;
+    Left := 150;
+    Top := 35 + 35 * NumberItem;
+    Width := 250;
+    Height := 21;
+    Caption := CaptionTmp;
+    //Items[1] := CaptionTmp;
+  end;
+end;
+
+procedure TEditViewForm.CreateNewEdit(NumberItem: integer; CurrentField: TMyField;
+  DBGrid: TDBGrid);
+begin
+  ObjectArray[High(ObjectArray)] :=
+    TEdit.Create(TEdit(ObjectArray[High(ObjectArray)]));
+  with TEdit(ObjectArray[High(ObjectArray)]) do
+  begin
+    Parent := EditViewForm;
+    Left := 150;
+    Top := 35 + 35 * NumberItem;
+    Width := 250;
+    Height := 21;
+    Caption := DBGrid.DataSource.DataSet.FieldByName(CurrentField.Name).AsString;
+  end;
+
+end;
+
+procedure TEditViewForm.CreateNewLabel(NumberItem: integer;
+  CurrentField: TMyField; Table: TMyTable);
+var
+  i: integer;
+begin
+  DynamicLabel := TLabel.Create(DynamicLabel);
+  with DynamicLabel do
+  begin
+    Parent := EditViewForm;
+    Left := 10;
+    Top := 35 + 35 * NumberItem;
+    Width := 140;
+    Height := 21;
+    if CurrentField.ClassName = 'TMyJoinField' then
+    begin
+      for i := 1 to High(Table.FieldArray) do
+      begin
+        if Table.FieldArray[i].Name = TMyJoinField(CurrentField).JoinFieldShow then
+          Caption := Table.FieldArray[i].Caption;
+      end;
+    end
+    else
+    begin
+      Caption := CurrentField.Caption;
+    end;
   end;
 end;
 

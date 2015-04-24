@@ -16,6 +16,9 @@ type
   TListViewForm = class(TForm)
     ApplyFilterButton: TButton;
     AddFilterButton: TButton;
+    UpdateButton: TButton;
+    InsertButton: TButton;
+    DeleteButton: TButton;
     DeleteFilterButton: TButton;
     DeleteAllFilterButton: TButton;
     FilterValueEdit: TEdit;
@@ -40,7 +43,6 @@ type
     procedure AddFilterButtonClick(Sender: TObject);
     procedure ApplyFilterButtonClick(Sender: TObject);
     class procedure CreateNewForm(Table: TMyTable; CurrentTag: integer); static;
-    procedure DBGridDblClick(Sender: TObject);
     procedure DBGridTitleClick(Column: TColumn);
     procedure DeleteAllFilterButtonClick(Sender: TObject);
     procedure FieldComboBoxChange(Sender: TObject);
@@ -48,6 +50,7 @@ type
     procedure DeleteFilterButtonClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure TurnFilterMenuClick(Sender: TObject);
+    procedure UpdateButtonClick(Sender: TObject);
   private
     FinishedFilterArray: array of TFinishedFilter;
     SortArray: array of Sort;
@@ -90,12 +93,6 @@ begin
     Caption := Table.Caption;
     Show;
   end;
-end;
-
-procedure TListViewForm.DBGridDblClick(Sender: TObject);
-begin
-  //Application.CreateForm(TListViewForm, ListViewForm);
-  TEditViewForm.CreateNewForm(TableArray[Tag], DBGrid, Tag);
 end;
 
 procedure TListViewForm.DBGridTitleClick(Column: TColumn);
@@ -337,6 +334,11 @@ procedure TListViewForm.TurnFilterMenuClick(Sender: TObject);
 begin
   CreateFilterPanel.Visible := False;
   AddedFilterPanel.Visible := False;
+end;
+
+procedure TListViewForm.UpdateButtonClick(Sender: TObject);
+begin
+  TEditViewForm.CreateNewForm(TableArray[Tag], DBGrid, Tag);
 end;
 
 end.

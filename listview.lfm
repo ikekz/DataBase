@@ -12,13 +12,12 @@ object ListViewForm: TListViewForm
   object DBNavigator: TDBNavigator
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
+    AnchorSideRight.Control = UpdateButton
     AnchorSideBottom.Control = DBGrid
     Left = 0
     Height = 32
     Top = 0
-    Width = 836
+    Width = 596
     Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
     ChildSizing.EnlargeHorizontal = crsScaleChilds
@@ -28,7 +27,7 @@ object ListViewForm: TListViewForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
     ClientHeight = 32
-    ClientWidth = 836
+    ClientWidth = 596
     DataSource = DataSource
     Options = []
     TabOrder = 0
@@ -151,7 +150,7 @@ object ListViewForm: TListViewForm
     DataSource = DataSource
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     TabOrder = 2
-    OnDblClick = DBGridDblClick
+    OnDblClick = UpdateButtonClick
     OnTitleClick = DBGridTitleClick
   end
   object AddedFilterPanel: TPanel
@@ -240,6 +239,44 @@ object ListViewForm: TListViewForm
       TabOrder = 3
       Visible = False
     end
+  end
+  object UpdateButton: TButton
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = InsertButton
+    AnchorSideBottom.Control = DBGrid
+    Left = 596
+    Height = 32
+    Top = 0
+    Width = 80
+    Anchors = [akTop, akRight, akBottom]
+    Caption = 'Изменить'
+    OnClick = UpdateButtonClick
+    TabOrder = 4
+  end
+  object InsertButton: TButton
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = DeleteButton
+    AnchorSideBottom.Control = DBGrid
+    Left = 676
+    Height = 32
+    Top = 0
+    Width = 80
+    Anchors = [akTop, akRight, akBottom]
+    Caption = 'Добавить'
+    TabOrder = 5
+  end
+  object DeleteButton: TButton
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = DBGrid
+    Left = 756
+    Height = 32
+    Top = 0
+    Width = 80
+    Anchors = [akTop, akRight, akBottom]
+    Caption = 'Удалить'
+    TabOrder = 6
   end
   object SQLQuery: TSQLQuery
     FieldDefs = <    
