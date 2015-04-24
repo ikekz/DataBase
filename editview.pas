@@ -6,18 +6,24 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, MetaData,
-  sqldb, DB, StdCtrls, DBGrids, DBCtrls, SQLRequest;
+  sqldb, DB, StdCtrls, DBGrids, DBCtrls, SQLRequest, Windows, DBConnection;
 
 type
+
+  TFieldEdit = class(TEdit)
+  public
+    Field: TMyField;
+  end;
 
   { TEditViewForm }
 
   TEditViewForm = class(TForm)
     ApplyButton: TButton;
+    CloseButton: TButton;
     DataSource: TDataSource;
     DynamicLabel: TLabel;
-    DynamicEdit: TEdit;
     SQLQuery: TSQLQuery;
+    procedure CloseButtonClick(Sender: TObject);
     class procedure CreateNewForm(Table: TMyTable; DBGrid: TDBGrid;
       CurrentTag: integer; IsUpdate: boolean); static;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -27,13 +33,11 @@ type
     ObjectArray: array of TObject;
     UpdateID: integer;
     procedure CreateNewLabel(NumberItem: integer; CurrentField: TMyField;
-      Table: TMyTable; IsUpdate: boolean);
+      Table: TMyTable);
     procedure CreateNewComboBox(NumberItem: integer; CurrentField: TMyField;
       DBGrid: TDBGrid; IsUpdate: boolean);
-    procedure CreateNewEdit(NumberItem: integer; CurrentField: TMyField;
+    procedure CreateNewFieldEdit(NumberItem: integer; CurrentField: TMyField;
       DBGrid: TDBGrid; IsUpdate: boolean);
-  public
-    { public declarations }
   end;
 
 var
@@ -63,13 +67,13 @@ begin
       if Table.FieldArray[i].ClassName <> 'TMyShowField' then
       begin
 
-        CreateNewLabel(NumberItem, Table.FieldArray[i], Table, IsUpdate);
+        CreateNewLabel(NumberItem, Table.FieldArray[i], Table);
 
         SetLength(ObjectArray, Length(ObjectArray) + 1);
         if Table.FieldArray[i].ClassName = 'TMyJoinField' then
           CreateNewComboBox(NumberItem, Table.FieldArray[i], DBGrid, IsUpdate)
         else
-          CreateNewEdit(NumberItem, Table.FieldArray[i], DBGrid, IsUpdate);
+          CreateNewFieldEdit(NumberItem, Table.FieldArray[i], DBGrid, IsUpdate);
 
         Inc(NumberItem);
         //end;
@@ -83,6 +87,11 @@ begin
     ShowModal;
     //ModalResult := 1;
   end;
+end;
+
+procedure TEditViewForm.CloseButtonClick(Sender: TObject);
+begin
+  EditViewForm.Close;
 end;
 
 procedure TEditViewForm.CreateNewComboBox(NumberItem: integer;
@@ -131,18 +140,19 @@ begin
   end;
 end;
 
-procedure TEditViewForm.CreateNewEdit(NumberItem: integer; CurrentField: TMyField;
-  DBGrid: TDBGrid; IsUpdate: boolean);
+procedure TEditViewForm.CreateNewFieldEdit(NumberItem: integer;
+  CurrentField: TMyField; DBGrid: TDBGrid; IsUpdate: boolean);
 begin
   ObjectArray[High(ObjectArray)] :=
-    TEdit.Create(TEdit(ObjectArray[High(ObjectArray)]));
-  with TEdit(ObjectArray[High(ObjectArray)]) do
+    TFieldEdit.Create(TFieldEdit(ObjectArray[High(ObjectArray)]));
+  with TFieldEdit(ObjectArray[High(ObjectArray)]) do
   begin
     Parent := EditViewForm;
     Left := 150;
     Top := 35 + 35 * NumberItem;
     Width := 250;
     Height := 21;
+    Field := CurrentField;
     if IsUpdate then
       Caption := DBGrid.DataSource.DataSet.FieldByName(CurrentField.Name).AsString;
   end;
@@ -150,7 +160,7 @@ begin
 end;
 
 procedure TEditViewForm.CreateNewLabel(NumberItem: integer;
-  CurrentField: TMyField; Table: TMyTable; IsUpdate: boolean);
+  CurrentField: TMyField; Table: TMyTable);
 var
   i: integer;
 begin
@@ -195,22 +205,23 @@ begin
           integer(TComboBox(ObjectArray[i]).Items.Objects[TComboBox(
           ObjectArray[i]).ItemIndex])
       else
-        Params[i].AsString := TEdit(ObjectArray[i]).Text;
+        Params[i].AsString := TFieldEdit(ObjectArray[i]).Text;
       //case TableArray[Tag].FieldArray[i].TypeField of
-      //  1: Params[i].AsString := TEdit(ObjectArray[i]).Text;
+      //  1: Params[i].AsString := TFieldEdit(ObjectArray[i]).Text;
       //2: Params[i].AsInteger :=
       //    Integer(TComboBox(ObjectArray[i]).Items.Objects[TComboBox(
       //    ObjectArray[i]).ItemIndex]);
 
       //end;
       //showmessage(ObjectArray[i].ClassName);
-      //Params[i].AsString := TEdit(ObjectArray[i]).Text;
+      //Params[i].AsString := TFieldEdit(ObjectArray[i]).Text;
     end;
     ParamByName('p').AsInteger := UpdateID;
     //ShowMessage(SQL.Text);
     ExecSQL;
+    DBConnectionForm.SQLTransaction.Commit;
   end;
-
+  EditViewForm.Close;
   //with SQLQuery do
   //begin
   //  Close;
@@ -229,9 +240,14 @@ end;
 
 procedure TEditViewForm.ApplyInsert(Sender: TObject);
 var
-  i, MaxID: integer;
+  i, MaxID, x, ReturnCode: integer;
 begin
-
+  //if MessageDlg('Добавить запись?', mtConfirmation, mbYesNo, 0) = mrYes then
+  //if MessageBox(Handle, PChar('Добавить запись?'), PChar('Подтверждение'),
+  //  MB_ICONQUESTION + MB_YESNO) = mrYes then
+  //if Application.MessageBox(PChar('Добавить запись?'), PChar('Подтверждение'),
+  //  MB_ICONQUESTION + MB_YESNO) = mrYes then
+  //begin
   with SQLQuery do
   begin
     Close;
@@ -254,14 +270,44 @@ begin
           integer(TComboBox(ObjectArray[i]).Items.Objects[TComboBox(
           ObjectArray[i]).ItemIndex])
       else
-        Params[i + 1].AsString := TEdit(ObjectArray[i]).Text;
+      begin
+        with TFieldEdit(ObjectArray[i]) do
+        begin
+          if Field.DataType = 'Integer' then
+          begin
+            Val(Text, x, ReturnCode);
+            if ReturnCode <> 0 then
+            begin
+              ShowMessage('Введите допустимое значение в поле "' +
+                Field.Caption + '"');
+              //if MessageDlg('Добавить запись?', mtConfirmation, mbYesNo, 0) = mrYes then
+              exit;
+            end;
+            Params[i + 1].AsInteger := StrToInt(Text);
+          end
+          else
+          begin
+            Params[i + 1].AsString := Text;
+          end;
+          //showmessage(TFieldEdit(ObjectArray[i]).Text);
+          //try
+          //  Params[i + 1].AsString := TFieldEdit(ObjectArray[i]).Text;
+          //except
+          //  Params[i + 1].AsInteger := TFieldEdit(ObjectArray[i]).Text;
+          //end;
+          //Params[i + 1].AsString := TFieldEdit(ObjectArray[i]).Text;
+        end;
+
+      end;
 
     end;
     //ParamByName('p').AsInteger := UpdateID;
     //ShowMessage(SQL.Text);
     ExecSQL;
+    DBConnectionForm.SQLTransaction.Commit;
   end;
-
+  EditViewForm.Close;
+  //end;
 end;
 
 procedure TEditViewForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);

@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, DBGrids,
-  DBCtrls, ExtCtrls, StdCtrls, Grids, Menus, sqldb, DB, MetaData,
-  SQLRequest, FilterAndSort, EditView;
+  DBCtrls, ExtCtrls, StdCtrls, Grids, Menus, sqldb, DB, MetaData, DBConnection,
+  SQLRequest, FilterAndSort, EditView, Windows;
 
 type
 
@@ -244,23 +244,31 @@ end;
 
 procedure TListViewForm.DeleteButtonClick(Sender: TObject);
 begin
-  with SQLQuery do
+  //if MessageDlg('Добавить запись?', mtConfirmation, mbYesNo, 0) = mrYes then
+  if MessageBox(Handle, PChar('Добавить запись?'), PChar('Подтверждение'),
+    MB_ICONQUESTION + MB_YESNO) = mrYes then
+  //if Application.MessageBox(PChar('Добавить запись?'), PChar('Подтверждение'),
+  //  MB_ICONQUESTION + MB_YESNO) = mrYes then
   begin
-    //Close;
-    SQL.Text := CreateDelete(TableArray[Tag]);
-    //if not Prepared then
-    //  Prepare;
-    //ShowMessage(sql.Text);
-    //ShowMessage(inttostr(DBGrid.DataSource.DataSet.FieldCount));
-    ParamByName('param').AsInteger :=
-      DBGrid.DataSource.DataSet.FieldByName(
-      TableArray[Tag].FieldArray[0].Name).AsInteger;
-    //ShowMessage(sql.Text);
-    Close;
-    ExecSQL;
+    with SQLQuery do
+    begin
+      //Close;
+      SQL.Text := CreateDelete(TableArray[Tag]);
+      //if not Prepared then
+      //  Prepare;
+      //ShowMessage(sql.Text);
+      //ShowMessage(inttostr(DBGrid.DataSource.DataSet.FieldCount));
+      ParamByName('param').AsInteger :=
+        DBGrid.DataSource.DataSet.FieldByName(
+        TableArray[Tag].FieldArray[0].Name).AsInteger;
+      //ShowMessage(sql.Text);
+      Close;
+      ExecSQL;
+      DBConnectionForm.SQLTransaction.Commit;
+    end;
+    RunSQL;
+    FillInDBGrid(TableArray[Tag], DBGrid);
   end;
-  RunSQL;
-  FillInDBGrid(TableArray[Tag], DBGrid);
 end;
 
 procedure TListViewForm.ApplyFilterButtonClick(Sender: TObject);
