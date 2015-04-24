@@ -7,12 +7,19 @@ interface
 uses
   Classes, SysUtils, MetaData, Dialogs, FilterAndSort;
 
+function CreateMaxID(Table: TMyTable): string;
 function CreateSelect(Table: TMyTable): string;
 function CreateFilter(Arr: array of TFinishedFilter): string;
 function CreateSort(Arr: array of Sort): string;
 function CreateUpdate(Table: TMyTable): string;
+function CreateInsert(Table: TMyTable): string;
 
 implementation
+
+function CreateMaxID(Table: TMyTable): string;
+begin
+  Result := 'SELECT max(' + Table.FieldArray[0].Name + ') ' + 'FROM ' + Table.Name;
+end;
 
 function CreateSelect(Table: TMyTable): string;
 var
@@ -74,6 +81,20 @@ begin
   end;
   Delete(Result, Length(Result) - 1, 1);
   Result += 'WHERE ' + Table.FieldArray[0].Name + ' = :p';
+end;
+
+function CreateInsert(Table: TMyTable): string;
+var
+  i: integer;
+begin
+  Result := 'INSERT INTO ' + Table.Name + ' VALUES (';
+  for i := 0 to High(Table.FieldArray) do
+  begin
+    if Table.FieldArray[i].ClassName <> 'TMyShowField' then
+      Result += ':param' + IntToStr(i) + ', ';
+  end;
+  Delete(Result, Length(Result) - 1, 1);
+  Result += ')';
 end;
 
 end.

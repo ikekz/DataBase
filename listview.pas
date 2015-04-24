@@ -46,6 +46,7 @@ type
     procedure DBGridTitleClick(Column: TColumn);
     procedure DeleteAllFilterButtonClick(Sender: TObject);
     procedure FieldComboBoxChange(Sender: TObject);
+    procedure InsertButtonClick(Sender: TObject);
     procedure ShowFilterMenuClick(Sender: TObject);
     procedure DeleteFilterButtonClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -290,6 +291,11 @@ begin
   SelectTypeCondition;
 end;
 
+procedure TListViewForm.InsertButtonClick(Sender: TObject);
+begin
+  TEditViewForm.CreateNewForm(TableArray[Tag], DBGrid, Tag, False);
+end;
+
 procedure TListViewForm.ShowFilterMenuClick(Sender: TObject);
 begin
   CreateFilterPanel.Visible := True;
@@ -338,7 +344,7 @@ end;
 
 procedure TListViewForm.UpdateButtonClick(Sender: TObject);
 begin
-  TEditViewForm.CreateNewForm(TableArray[Tag], DBGrid, Tag);
+  TEditViewForm.CreateNewForm(TableArray[Tag], DBGrid, Tag, True);
 end;
 
 end.
