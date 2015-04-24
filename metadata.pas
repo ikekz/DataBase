@@ -161,6 +161,7 @@ initialization
 
   with TMyTable.AddTable('Schedules', 'Расписание') do
   begin
+    AddField('ScheduleID', 'ID', 'Integer', 40, False);
     AddJoinField('GroupID', 'ID группы', 'Integer', 90, False, 'Groups',
       'GroupID', 'GroupNumber');
     AddJoinField('WeekDayID', 'ID дня', 'Integer', 90, False, 'WeekDays',
@@ -186,6 +187,7 @@ initialization
 
   with TMyTable.AddTable('Teachers_Subjects', 'Предметы учитиелей') do
   begin
+    AddField('Teachers_SubjectID', 'ID', 'Integer', 40, False);
     AddJoinField('TeacherID', 'ID учителя', 'Integer', 90, False,
       'Teachers', 'TeacherID', 'TeacherInitials');
     AddJoinField('SubjectID', 'ID предмета', 'Integer', 90, False,
@@ -196,6 +198,7 @@ initialization
 
   with TMyTable.AddTable('Group_Subjects', 'Предметы групп') do
   begin
+    AddField('Group_SubjectID', 'ID', 'Integer', 40, False);
     AddJoinField('GroupID', 'ID группы', 'Integer', 90, False, 'Groups',
       'GroupID', 'GroupNumber');
     AddJoinField('SubjectID', 'ID предмета', 'Integer', 90, False,
